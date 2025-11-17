@@ -1,6 +1,6 @@
 ---
-title: "project"
-author: "王悦安"
+title: "网易云音乐分析"
+author: "王悦安、赵紫曦"
 date: "2025-11-13"
 output: html_document
 ---
