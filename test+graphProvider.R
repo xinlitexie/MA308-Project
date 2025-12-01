@@ -4,6 +4,8 @@ library(cluster)
 library(lubridate)
 library(naniar)
 library(corrplot)
+library(jiebaR)
+library(wordcloud)
 
 ###读取数据
 data <- read_csv("网易云音乐歌单分析/data.csv")
@@ -119,6 +121,26 @@ result <- kmeans_function(data,"play_count", k = 3)
 ###同时，其按照播放量划分出按照播放量低中高的三个数据包
 
 ###根据不同数据量的包来提取热词
+cutter <- worker()
+windowsFonts(SimHei = windowsFont("SimHei"))
+texts_low <- result$low$introduction
+all_text_low <- paste(texts_low, collapse = " ")
+words_low <- cutter[all_text_low]
+print(words_low)
+word_low_freq <- table(words_low) %>%
+  as.data.frame() %>%
+  arrange(desc(Freq)) %>%
+  head(20)
+colnames(word_low_freq) <- c("Word_low", "Frequency")
+print(word_low_freq)
+# 简单词云
+wordcloud(words = word_low_freq$Word, 
+          freq = word_low_freq$Frequency,
+          min.freq = 1,
+          max.words = 50,
+          random.order = FALSE,
+          colors = brewer.pal(8, "Dark2"),
+          family = "SimHei")  # 确保中文字体
 
 ###导出处理后的数据
 write_csv(data, "data_processed.csv")
