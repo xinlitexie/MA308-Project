@@ -75,8 +75,159 @@ remove_columns_tidy <- function(data, col_names) {
   
   return(data)
 }
-delete_col_names = c("identity")
+delete_col_names = c("identity", "topics", "create_time")
 data <- remove_columns_tidy(data, delete_col_names)
+
+data$author <- factor(data$author)
+
+###设置中文字体
+windowsFonts(SimHei = windowsFont("SimHei"))
+
+###定义停用词列表
+stopwords_custom <- c("br", "介绍", "一个", "没有", "可以", "一种", "就是", "因为", "一些", "这个", "这些", "不是", "所以", "什么", "那些")
+
+###清洗文本中所有的标点
+text_clean <- function (texts) {
+  all_text <- paste(texts, collapse = " ")
+  all_text <- str_replace_all(all_text, "[，。]", " ")
+  return(all_text)
+}
+
+###分析提取热词并绘图，可以先不设置停用词，然后根据出来的结果设置停用词
+text_analysis <- function(texts) {
+  text_cleaned <- text_clean(texts)
+  
+  ###初始化分词器
+  cutter <- worker()
+  words <- cutter[text_cleaned]
+  words_filtered <- words[
+    nchar(words) > 1 &
+    !words %in% stopwords_custom
+  ]
+  word_freq <- table(words_filtered) %>%
+    as.data.frame() %>%
+    arrange(desc(Freq)) %>%
+    head(50)
+  colnames(word_freq) <- c("Word", "Frequency")
+  
+  ###绘制词云图
+  wordcloud(words = word_freq$Word,
+            freq = word_freq$Frequency, 
+            min.freq = 5,
+            max.words = 100,
+            random.order = FALSE,
+            colors = rainbow(10),
+            family = "SimHei")
+  
+  ###返回高频词以及高频词的频率
+  return(word_freq)
+}
+name_analysis <- text_analysis(data$name)
+introduction_analysis <- text_analysis(data$introduction)
+
+###处理创建时间列表
+data <- data %>%
+  mutate(
+    create_datetime = as.POSIXct(create_time, origin = "1970-01-01"),
+    create_year = year(create_datetime),
+    create_month = month(create_datetime),
+    create_date = as.Date(create_datetime)
+  )
+
+### 提取numeric和factor变量，并进行简单数据统计分析
+numeric_vars <- names(data)[sapply(data, is.numeric)]
+length(numeric_vars)
+factor_vars <- names(data)[sapply(data, is.factor)]
+length(factor_vars)
+desc_stats <- (data[, numeric_vars])
+summary(desc_stats)
+
+###绘制统计数据图片
+par(mfrow = c(2, 1), mar = c(2, 3, 1, 2) + 0.1)
+
+for (var in numeric_vars) {
+  current_data = data[[var]]
+  kernels <- c("rectangular", "triangular", "epanechnikov", "gaussian")
+  colors <- c("red", "blue", "green", "yellow")
+  hist(current_data, freq = FALSE, main = paste("直方图与核密度估计:", var), xlab = var, ylab = "密度", col = "lightgray", border = "black", ylim = c(0, max(hist(current_data, plot = FALSE)$density) * 1.3))
+  
+  bandwidths = 1
+  for (i in seq_along(kernels)) {
+    kernel_type <- kernels[i]
+    color <- colors[i]
+    kde <- density(current_data, kernel = kernel_type, bandwidths = bandwidths, adjust = 1)
+    lines(kde, col = color, lty = 1, lwd = 2)
+  }
+  
+  legend("topright", legend = kernels, col = colors, lty = 1, lwd = 2, title = "核函数", bty = "n")
+  
+  boxplot(current_data, main = paste("箱线图:", var), ylab = var, col = "lightblue")
+}
+par(mfrow = c(1, 1))
+
+###对于factor变量的基础统计
+num_vars <- length(factor_vars)
+par(mfrow = c(1, 3), mar = c(4, 4, 3, 2))
+
+for (var in factor_vars) {
+  freq_data <- table(data[[var]])
+  prop_data <- prop.table(freq_data)
+  
+  categories <- names(freq_data)
+  colors <- c("#1f77b4", "#ff7f0e")  # 两个颜色
+  
+  barplot(freq_data, 
+          main = paste("频数分布:", var),
+          xlab = var,
+          ylab = "频数",
+          col = colors[1:length(categories)],
+          border = "black",
+          ylim = c(0, max(freq_data) * 1.2))
+  
+  text(x = seq_along(freq_data), 
+       y = freq_data,
+       label = freq_data,
+       pos = 3,  # 在条形上方
+       cex = 0.8,
+       col = "black")
+  
+  barplot(prop_data * 100, 
+          main = paste("百分比分布:", var),
+          xlab = var,
+          ylab = "百分比 (%)",
+          col = colors[1:length(categories)],
+          border = "black",
+          ylim = c(0, 100))
+  
+  text(x = seq_along(prop_data), 
+       y = prop_data * 100,
+       label = paste0(round(prop_data * 100, 1), "%"),
+       pos = 3,
+       cex = 0.8,
+       col = "black")
+
+  pie(freq_data,
+      main = paste("饼图:", var),
+      col = colors[1:length(categories)],
+      labels = paste0(categories, "\n", 
+                      freq_data, " (", 
+                      round(prop_data * 100, 1), "%)"),
+      cex = 0.9)
+
+  legend("topright",
+         legend = categories,
+         fill = colors[1:length(categories)],
+         title = paste("水平:", var))
+}
+par(mfrow = c(1, 1))
+
+
+
+
+
+
+
+
 
 ###依照play_count数据，将原本数据集分为三类：low，medium，high，方便之后对其中数据进行分析，得到哪些关键数据的高值/低值使得其进入不同类数据集
 summary(data$play_count)
@@ -120,27 +271,7 @@ result <- kmeans_function(data,"play_count", k = 3)
 ###注意到解释方差比例达到了81.3%，故而可以认为这个聚类算法十分有效
 ###同时，其按照播放量划分出按照播放量低中高的三个数据包
 
-###根据不同数据量的包来提取热词
-cutter <- worker()
-windowsFonts(SimHei = windowsFont("SimHei"))
-texts_low <- result$low$introduction
-all_text_low <- paste(texts_low, collapse = " ")
-words_low <- cutter[all_text_low]
-print(words_low)
-word_low_freq <- table(words_low) %>%
-  as.data.frame() %>%
-  arrange(desc(Freq)) %>%
-  head(20)
-colnames(word_low_freq) <- c("Word_low", "Frequency")
-print(word_low_freq)
-# 简单词云
-wordcloud(words = word_low_freq$Word, 
-          freq = word_low_freq$Frequency,
-          min.freq = 1,
-          max.words = 50,
-          random.order = FALSE,
-          colors = brewer.pal(8, "Dark2"),
-          family = "SimHei")  # 确保中文字体
+
 
 ###导出处理后的数据
 write_csv(data, "data_processed.csv")
