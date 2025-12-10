@@ -10,10 +10,15 @@ library(scatterplot3d)
 library(MASS)
 library(scales)
 library(dplyr)
+library(stringr)
+library(randomForest)
+library(broom)
+library(car)
+library(moments)
 
 data <- read_csv("网易云音乐歌单分析/data.csv")
 
-###1、清洗数据
+# ==== 1、清洗数据 ====
 
 ###获取数据基础信息
 names(data)
@@ -41,13 +46,6 @@ convert_binary <- function(data) {
 }
 data <- convert_binary(data)
 
-data <- data %>%
-  mutate(
-    create_datetime = as.POSIXct(create_time, origin = "1970-01-01"),
-    create_year = year(create_datetime),
-    create_month = month(create_datetime),
-    create_date = as.Date(create_datetime)
-  )
 
 ###删除处理后的列
 remove_columns_tidy <- function(data, col_names) {
@@ -69,7 +67,7 @@ remove_columns_tidy <- function(data, col_names) {
 }
 
 data_cleaned = data
-###2、描述性分布和热图
+# ==== 2、描述性分布和热图 ====
 
 ### 提取numeric和factor变量，并进行简单数据统计分析
 numeric_vars <- names(data_cleaned)[sapply(data_cleaned, is.numeric)]
@@ -203,10 +201,13 @@ name_analysis <- text_analysis(data_cleaned$name)
 introduction_analysis <- text_analysis(data_cleaned$introduction)
 
 
+###是否需要log变换
+skewness(data_cleaned$play_count)
 
-###3、模块1：探究播放量、收藏量、分享量、评论量以及作者粉丝数之间的线性相关关系。
+
+# ====模块1：探究播放量、收藏量、分享量、评论量以及作者粉丝数之间的线性相关关系。 ====
 result_vars <- data_cleaned %>%
-  select(play_count, collect_count, share_count, comment_count, fans)
+  dplyr::select(play_count, collect_count, share_count, comment_count, fans)
 # 计算相关系数矩阵
 cor_matrix <- cor(result_vars, use = "complete.obs")
 # 绘制热力图
@@ -225,9 +226,9 @@ corrplot(cor_matrix,
 
 
 
-###模块2：高价值标签挖掘
-tag_analysis <- data_cleaned %>%
-  select(topics, play_count) %>%
+#====模块2：高价值标签挖掘====
+tag_analysis_top <- data_cleaned %>%
+  dplyr::select(topics, play_count) %>%
   mutate(topics = str_remove_all(topics, "\\[|\\]|'|\"| ")) %>%
   separate_rows(topics, sep = ",") %>%
   # 按标签分组统计
@@ -240,8 +241,22 @@ tag_analysis <- data_cleaned %>%
   arrange(desc(avg_play)) %>%
   slice_head(n = 10)
 
-tag_analysis_avoid_extreme <- data_cleaned %>%
-  select(topics, play_count) %>%
+tag_analysis_bottom <- data_cleaned %>%
+  dplyr::select(topics, play_count) %>%
+  mutate(topics = str_remove_all(topics, "\\[|\\]|'|\"| ")) %>%
+  separate_rows(topics, sep = ",") %>%
+  # 按标签分组统计
+  group_by(topics) %>%
+  summarise(
+    avg_play = mean(play_count),
+    count = n()
+  ) %>%
+  # 按平均播放量升序排列
+  arrange(avg_play) %>%
+  slice_head(n = 10)
+
+tag_analysis_avoid_extreme_top <- data_cleaned %>%
+  dplyr::select(topics, play_count) %>%
   mutate(topics = str_remove_all(topics, "\\[|\\]|'|\"| ")) %>%
   separate_rows(topics, sep = ",") %>%
   # 按标签分组统计
@@ -255,8 +270,23 @@ tag_analysis_avoid_extreme <- data_cleaned %>%
   arrange(desc(avg_play)) %>%
   slice_head(n = 10)
 
+tag_analysis_avoid_extreme_bottom <- data_cleaned %>%
+  dplyr::select(topics, play_count) %>%
+  mutate(topics = str_remove_all(topics, "\\[|\\]|'|\"| ")) %>%
+  separate_rows(topics, sep = ",") %>%
+  # 按标签分组统计
+  group_by(topics) %>%
+  summarise(
+    avg_play = mean(play_count),
+    count = n()
+  ) %>%
+  filter(count > 10) %>%
+  # 按平均播放量升序排列
+  arrange(avg_play) %>%
+  slice_head(n = 10)
+
 tag_freq <- data_cleaned %>%
-  select(topics, play_count) %>%
+  dplyr::select(topics, play_count) %>%
   mutate(topics = str_remove_all(topics, "\\[|\\]|'|\"| ")) %>%
   separate_rows(topics, sep = ",") %>%
   # 按标签分组统计
@@ -267,7 +297,7 @@ tag_freq <- data_cleaned %>%
   arrange(desc(count)) %>%
   slice_head(n = 10)
 # 绘图
-ggplot(tag_analysis, aes(x = reorder(topics, avg_play), y = avg_play)) +
+ggplot(tag_analysis_top, aes(x = reorder(topics, avg_play), y = avg_play)) +
   geom_col(fill = "steelblue") +
   coord_flip() + # 翻转坐标轴便于阅读标签
   labs(
@@ -278,11 +308,33 @@ ggplot(tag_analysis, aes(x = reorder(topics, avg_play), y = avg_play)) +
   theme_minimal() +
   theme(axis.text.y = element_text(size = 10))
 
-ggplot(tag_analysis_avoid_extreme, aes(x = reorder(topics, avg_play), y = avg_play)) +
+ggplot(tag_analysis_bottom, aes(x = reorder(topics, avg_play), y = avg_play)) +
+  geom_col(fill = "steelblue") +
+  coord_flip() + # 翻转坐标轴便于阅读标签
+  labs(
+    title = "Bottom 10 Tags by Average Play Count",
+    x = "Tags",
+    y = "Average Play Count"
+  ) +
+  theme_minimal() +
+  theme(axis.text.y = element_text(size = 10))
+
+ggplot(tag_analysis_avoid_extreme_top, aes(x = reorder(topics, avg_play), y = avg_play)) +
   geom_col(fill = "steelblue") +
   coord_flip() + # 翻转坐标轴便于阅读标签
   labs(
     title = "Top 10 Tags by Average Play Count(Happen more than ten times)",
+    x = "Tags",
+    y = "Average Play Count"
+  ) +
+  theme_minimal() +
+  theme(axis.text.y = element_text(size = 10))
+
+ggplot(tag_analysis_avoid_extreme_bottom, aes(x = reorder(topics, avg_play), y = avg_play)) +
+  geom_col(fill = "steelblue") +
+  coord_flip() + # 翻转坐标轴便于阅读标签
+  labs(
+    title = "Bottom 10 Tags by Average Play Count(Happen more than ten times)",
     x = "Tags",
     y = "Average Play Count"
   ) +
@@ -301,99 +353,150 @@ ggplot(tag_freq, aes(x = reorder(topics, count), y = count)) +
   theme(axis.text.y = element_text(size = 10))
 
 
-###模块6：随机森林（针对上面的30个标签（可能有重复）做随机森林）
-# --- 1. 数据准备 ---
-# 清洗 topics 列，移除多余符号
-tag_df <- data_cleaned %>%
-  select(play_count, fans, topics) %>%
-  mutate(topics = str_remove_all(topics, "\\[|\\]|'|\"| ")) %>%
-  separate_rows(topics, sep = ",") %>%
-  filter(topics != "")
 
-# 找出 Top 30 最常用的标签
-top_tags_list <- tag_df %>%
-  count(topics, sort = TRUE) %>%
-  slice_head(n = 30) %>%
+#====模块3：随机森林进一步分析tag impact====
+###提取并集标签
+all_tags <- unique(c(
+  tag_analysis_avoid_extreme_top$topics,
+  tag_analysis_avoid_extreme_bottom$topics,
+  tag_freq$topics
+))
+
+cat("共提取", length(all_tags), "个不重复标签\n")
+
+###清洗topic量
+model_data_long <- data_cleaned %>%
+  dplyr::select(play_count, topics) %>%
   mutate(
-    # 【关键修复】给每个中文标签创建一个英文 ID (tag_1, tag_2...)
-    # 这样进模型时绝对不会报错
-    tag_id = paste0("tag_", row_number()) 
-  )
-
-print("Top Tags Mapping (前5个示例):")
-print(head(top_tags_list))
-
-# --- 2. 构建回归数据集 ---
-reg_data_full <- df_clean %>%
-  select(play_count, fans, topics) %>%
-  mutate(
-    log_play = log1p(play_count), 
-    log_fans = log1p(fans)
-  )
-
-# 【关键修复】循环创建 0/1 列，使用英文 ID 作为列名
-# 我们在这里遍历映射表，把 topics 里的中文匹配到对应的英文 tag_id 列中
-for(i in 1:nrow(top_tags_list)) {
-  real_name <- top_tags_list$topics[i]   # 真实的中文名 (用来匹配)
-  safe_name <- top_tags_list$tag_id[i]   # 安全的英文名 (用来做列名)
-  
-  # 如果 topics 包含这个中文词，则该英文列标为 1
-  reg_data_full[[safe_name]] <- ifelse(str_detect(reg_data_full$topics, real_name), 1, 0)
-}
-
-# --- 3. 运行回归模型 ---
-# 公式现在变成了：log_play ~ log_fans + tag_1 + tag_2 ... (全英文，非常稳定)
-features <- top_tags_list$tag_id
-formula_str <- paste("log_play ~ log_fans +", paste(features, collapse = " + "))
-
-# 运行模型
-model_full <- lm(as.formula(formula_str), data = reg_data_full)
-
-# --- 4. 提取结果并换回中文名 ---
-model_full_tidy <- tidy(model_full, conf.int = TRUE) %>%
-  # 只筛选出标签变量
-  filter(term %in% features) %>%
-  # 【关键修复】把英文 ID (tag_1) 换回中文名 (欧美) 用于画图
-  left_join(top_tags_list, by = c("term" = "tag_id")) %>%
-  filter(p.value < 0.05) %>%
-  mutate(
-    direction = ifelse(estimate > 0, "Positive (流量增益)", "Negative (流量减益)")
+    topics_clean = str_remove_all(topics, "\\[|\\]|'|\"| "),
+    log_play = log1p(play_count)
   ) %>%
-  arrange(desc(estimate))
+  separate_rows(topics_clean, sep = ",") %>%
+  filter(topics_clean != "")
 
-# --- 5. 绘制森林图 ---
-ggplot(model_full_tidy, aes(x = estimate, y = fct_reorder(topics, estimate), color = direction)) +
-  geom_errorbarh(aes(xmin = conf.low, xmax = conf.high), height = 0.2, size = 0.8) +
-  geom_point(size = 3) +
-  geom_vline(xintercept = 0, linetype = "dashed", color = "gray50") +
-  scale_color_manual(values = c("Positive (流量增益)" = "#E41A1C", "Negative (流量减益)" = "#377EB8")) +
-  labs(
-    title = "Top Tags Impact on Play Count (Fixed Version)",
-    subtitle = "Regression Coefficients (Controlling for Fans)",
-    x = "Effect Size (Impact on Play Count)",
-    y = "Tags",
-    color = "Impact Type"
-  ) +
-  theme_minimal() +
-  theme(
-    legend.position = "bottom",
-    axis.text.y = element_text(size = 10, face = "bold") # 这里的中文应该能正常显示了
+###获取唯一歌曲记录
+unique_songs <- model_data_long %>% distinct(play_count, log_play)
+tag_matrix <- matrix(0L, 
+                     nrow = nrow(unique_songs), 
+                     ncol = length(all_tags))
+colnames(tag_matrix) <- paste0("tag_", make.names(all_tags))
+for(i in seq_len(nrow(unique_songs))) {
+  song_play_count <- unique_songs$play_count[i]
+  song_tags <- model_data_long$topics_clean[model_data_long$play_count == song_play_count]
+  
+  for(tag in song_tags) {
+    if(tag %in% all_tags) {
+      col_idx <- match(make.names(tag), make.names(all_tags))
+      tag_matrix[i, col_idx] <- 1L
+    }
+  }
+}
+model_data_wide <- cbind(unique_songs, as.data.frame(tag_matrix))
+
+###线性回归
+feature_cols <- colnames(tag_matrix)
+formula_str <- paste("log_play ~", paste(feature_cols, collapse = " + "))
+model_lm <- lm(as.formula(formula_str), data = model_data_wide)
+
+###提取系数
+model_all_tags <- tidy(model_lm, conf.int = TRUE) %>%
+  filter(term %in% feature_cols) %>%
+  mutate(
+    tag_name = all_tags[match(str_remove(term, "tag_"), make.names(all_tags))],
+    significance = ifelse(p.value < 0.05, "Significant", "Not Significant")
   )
 
+###绘制森林图
+# 绘制基本图
+# 添加颜色和透明度
+ggplot(model_all_tags, aes(x = estimate, y = reorder(tag_name, estimate), color = ifelse(estimate > 0, "Positive", "Negative"), alpha = significance)) +
+  geom_point() +
+  geom_errorbar(aes(xmin = conf.low, xmax = conf.high), width = 0.2) +
+  geom_vline(xintercept = 0, linetype = "dashed", color = "gray50") +
+  scale_color_manual(values = c("Positive" = "#E41A1C", "Negative" = "#377EB8")) +
+  scale_alpha_manual(values = c("Significant" = 1.0, "Not Significant" = 0.4)) +
+  labs(title = "All Tags Impact on Play Count (Pure Tag Effects)",
+       subtitle = "Linear Regression Coefficients with 95% CI | Red = Positive, Blue = Negative",
+       x = "Effect Size (Impact on Log Play Count)",
+       y = NULL,
+       color = "Impact Direction",
+       alpha = "Significance") +
+  theme_minimal()
 
 
 
 
-###模块5：检测播放数异常值点和杠杆点
 
 
-###模块5：聚类分析（需要去掉异常值点），之后再补充进去
+#====模块4：检测播放数异常值点和杠杆点====
+
+data_cleaned <- data_cleaned %>%
+  # 使用log1p处理0值
+  mutate(log_play = log1p(play_count)) %>%
+  filter(play_count > 0, collect_count >= 0, share_count >= 0, comment_count >= 0) %>%
+  na.omit()
+
+###构建model
+diagnostic_formula <- log_play ~ collect_count + share_count + comment_count
+diag_model <- lm(diagnostic_formula, data = data_cleaned)
+summary(diag_model)
+
+###计算诊断统计量
+par(mar = c(6, 6, 5, 3) + 0.1, mgp = c(3.5, 1, 0))
+cooks_dist <- cooks.distance(diag_model)
+leverage <- hatvalues(diag_model)
+std_resid <- rstandard(diag_model)
+p_influence <- influencePlot(
+  diag_model,
+  main = "影响力诊断图 (Influence Plot)",
+  sub = "圆圈大小 ∝ Cook's距离 | 红色点需特别关注",
+  xlab = "标准化残差 (Standardized Residuals)",
+  ylab = "杠杆值 (Leverage)",
+  col = c("steelblue", "orange", "red"),
+  pch = c(16, 18),
+  lwd = 1.5,                 # 减小线宽
+  mar = c(5, 5, 4, 2) + 0.1, # 增加边距（下、左、上、右）
+  mgp = c(2.5, 0.7, 0),      # 调整坐标轴标签位置
+  cex.lab = 1.0,             # 坐标轴标签大小
+  cex.main = 1.3,            # 标题大小
+  cex.sub = 0.9,             # 副标题大小
+  cex.axis = 0.9,            # 坐标轴刻度大小
+  las = 1                    # 刻度标签水平（避免重叠）
+)
+p_influence
+
+threshold_cook <- 4 / nrow(data_cleaned)
+threshold_leverage <- 3 * length(coef(diag_model)) / nrow(data_cleaned)
+
+###识别异常值
+outlier_mask <- cooks_dist > threshold_cook
+leverage_mask <- leverage > threshold_leverage
+
+cat("识别出异常值:", sum(outlier_mask), "个\n")
+
+data_normal <- data_cleaned %>% filter(!outlier_mask) %>% dplyr::select(log_play, play_count)
+data_outliers <- data_cleaned %>% filter(outlier_mask) %>% dplyr::select(log_play, play_count) %>% mutate(cluster = NA)
+
+
+
+
+
+
+
+
+#====模块5：聚类分析（需要去掉异常值点），之后再补充进去====
+
+###提取正常值
+
+data_normal <- data_cleaned %>% filter(!outlier_mask) %>% dplyr::select(log_play, play_count)
+data_outliers <- data_cleaned %>% filter(outlier_mask) %>% dplyr::select(log_play, play_count) %>% mutate(cluster = NA)
 
 ###肘部算法
+
 set.seed(1234)
 wss = numeric(10)
 for (i in 1:10) {
-  km = kmeans(data_cleaned$play_count, centers = i, nstart = 25)
+  km = kmeans(data_normal$play_count, centers = i, nstart = 25)
   wss[i] = km$tot.withinss
 }
 plot(1:10, wss, type = "b", xlab = "Number of groups", ylab = "Within groups sum of squares")
@@ -439,11 +542,12 @@ kmeans_function <- function(data, col_names, k) {
 }
 
 ###导出结果
-result <- kmeans_function(data_cleaned, "play_count", k = 4)
+result1 <- kmeans_function(data_normal, "play_count", k = 4)
+result2 <- kmeans_function(data_cleaned, "play_count", k = 4)
 
 ###可视化操作
-data_clustered <- result$data_with_clusters
-ggplot(data_clustered, aes(x = factor(cluster), y = play_count, fill = factor(cluster))) +
+data_clustered1 <- result1$data_with_clusters
+ggplot(data_clustered1, aes(x = factor(cluster), y = play_count, fill = factor(cluster))) +
   geom_boxplot() +
   labs(title = "不同聚类的 play_count 分布",
        x = "聚类",
@@ -452,14 +556,28 @@ ggplot(data_clustered, aes(x = factor(cluster), y = play_count, fill = factor(cl
   scale_fill_brewer(palette = "Set2") +
   theme_minimal()
 
-###注意到解释方差比例达到了88.07%，故而可以认为这个聚类算法十分有效
-explained_variance <- result$kmeans_result$betweenss / result$kmeans_result$totss
+data_clustered2 <- result2$data_with_clusters
+ggplot(data_clustered2, aes(x = factor(cluster), y = play_count, fill = factor(cluster))) +
+  geom_boxplot() +
+  labs(title = "不同聚类的 play_count 分布",
+       x = "聚类",
+       y = "播放次数",
+       fill = "聚类") +
+  scale_fill_brewer(palette = "Set2") +
+  theme_minimal()
+###注意到解释方差比例达到了89.53%，故而可以认为这个聚类算法十分有效
+explained_variance <- result1$kmeans_result$betweenss / result1$kmeans_result$totss
 cat("解释方差比例: ", round(explained_variance * 100, 2), "%\n")
 
 
-###模块4：日均播放量
-# 假设当前时间是数据集中最后一条数据的后一天，或者使用系统时间
-reference_date <- max(data_cleaned$create_time) + days(1)
+
+
+
+
+#====模块6：日均播放量(改成kmeans更好，但没写出来就用中位数)====
+
+
+reference_date <- max(data_cleaned$create_time)
 
 data_velocity <- data_cleaned %>%
   mutate(
@@ -471,40 +589,69 @@ data_velocity <- data_cleaned %>%
   arrange(desc(plays_per_day))
 
 # 看看是谁在“爆发”：取出日均播放量最高的 Top 10
-top_velocity <- head(data_velocity %>% select(name, plays_per_day, days_alive, fans), 10)
+top_velocity <- head(data_velocity %>% dplyr::select(name, plays_per_day, days_alive, fans), 10)
+print(top_velocity)
 
-# 可视化：存活天数 vs 日均播放量
-ggplot(data_velocity, aes(x = days_alive, y = plays_per_day)) +
-  geom_point(alpha = 0.5, color = "purple") +
-  scale_y_log10() + # 使用对数轴，因为爆发系数差异巨大
+median_days <- median(data_velocity$days_alive)
+median_plays <- median(data_velocity$plays_per_day)
+data_velocity$quadrant <- with(data_velocity, {
+  case_when(
+    days_alive <= median_days & plays_per_day > median_plays ~ "左上：新生优秀",
+    days_alive <= median_days & plays_per_day <= median_plays ~ "左下：新生不优秀",
+    days_alive > median_days & plays_per_day > median_plays ~ "右上：老但优秀",
+    days_alive > median_days & plays_per_day <= median_plays ~ "右下：老不优秀"
+  ) %>% factor(levels = c("左上：新生优秀", "左下：新生不优秀", "右上：老但优秀", "右下：老不优秀"))
+})
+
+
+ggplot(data_velocity, aes(x = days_alive, y = plays_per_day, color = quadrant)) +
+  geom_point(alpha = 0.7, size = 2.5) +
+  
+  # 分界线
+  geom_vline(xintercept = median_days, linetype = "dashed", color = "gray50", size = 1) +
+  geom_hline(yintercept = median_plays, linetype = "dashed", color = "gray50", size = 1) +
+  
+  scale_y_log10(labels = scales::comma) +
+  scale_x_continuous(labels = scales::comma) +
+  
   labs(
-    title = "Content Velocity Analysis",
-    x = "Days Since Creation",
-    y = "Average Plays Per Day (Log Scale)",
-    subtitle = "Newer hits vs. Old classics"
+    title = "歌单Velocity四象限分析",
+    subtitle = paste("分界线: 天数=", round(median_days), "天, 播放量=", round(median_plays)),
+    x = "存活天数", y = "日均播放量",
+    color = "象限类型"
   ) +
-  theme_minimal()
+  
+  scale_color_manual(values = c(
+    "左上：新生优秀" = "#2ECC71",
+    "左下：新生不优秀" = "#E74C3C",
+    "右上：老但优秀" = "#3498DB",
+    "右下：老不优秀" = "#95A5A6"
+  )) +
+  
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+    legend.position = "none",
+    panel.grid.minor = element_blank()
+  )
 
 
-###再补充一次k聚类算法 k=4
 
 
 
 
 
 
-###模块7：歌单信息的影响
+
+#====模块7：歌单信息的影响====
 data_morph <- data_cleaned %>%
   dplyr::select(play_count, length_name, length_intro, number_songs, number_hot_singers) %>%
   filter(play_count > 0) %>%
   na.omit()
 
 
-boxcox(lm(play_count ~ length_name + length_intro + number_songs + number_hot_singers, data = data_morph), 
-       lambda = seq(-2, 2, length.out = 100))
 
-# --- 2. 建立回归模型 ---
-# 公式：播放量 ~ 标题长度 + 简介长度 + 歌曲总数 + 热门歌手数
+###公式：log播放量 ~ 标题长度 + 简介长度 + 歌曲总数 + 热门歌手数
 model_morph <- lm(log(play_count) ~ length_name + length_intro + number_songs + number_hot_singers, data = data_morph)
 print("--- Regression Summary: Length & Size Effects ---")
 print(summary(model_morph))
@@ -516,29 +663,30 @@ anova(model_morph_changed, model_morph)
 
 
 
-###模块8：作者信息的影响
+#====模块8：作者信息的影响====
 data_author <- data_cleaned %>%
   dplyr::select(play_count, fans, grade, playlists, talent, verification, musician) %>%
   filter(play_count > 0) %>%
   na.omit()
 
+
+boxcox(lm(play_count ~ fans * grade * playlists + talent * verification * musician, data = data_author), 
+       lambda = seq(-2, 2, length.out = 100))
+
 model_full <- lm(
-  play_count ~ fans * grade * playlists + talent * verification * musician,
+  log(play_count) ~ fans * grade * playlists + talent * verification * musician,
   data = data_author
 )
 
 summary(model_full)
-stepAIC(model_full, direction = "backward")
-
-model_changed <- lm(
-  play_count ~ fans * grade * playlists + verification,
-  data = data_author
-)
+model_changed <- stepAIC(model_full, direction = "backward")
 
 summary(model_changed)
 anova(model_changed, model_full)
 
-###模块11：身份的作用
+
+
+###模块9：身份的作用(用permutation test来做检测)
 data_id <- data_cleaned %>%
   mutate(
     is_talent = ifelse(talent == "是", 1, 0),
@@ -546,6 +694,105 @@ data_id <- data_cleaned %>%
     is_musician = ifelse(musician == "是", 1, 0)
   )
 
+data_id <- data_id %>%
+  mutate(
+    identity_4level = case_when(
+      is_verified == 1 ~ "Verification",
+      is_talent == 1 ~ "Talent",
+      is_musician == 1 ~ "Musician",
+      TRUE ~ "None"
+    ) %>% factor(levels = c("None", "Talent", "Musician", "Verification"))
+  )
+
+comparison_pairs <- list(
+  c("None", "Talent"),
+  c("None", "Musician"),
+  c("None", "Verification"),
+  c("Musician", "Talent"),
+  c("Talent", "Verification"),
+  c("Musician", "Verification")
+)
+
+# H0: group2均值 = group1均值
+# H1: group2均值 > group1均值（单侧）
+run_permutation_test <- function(data, group_col, value_col, pair, n_perm = 10000) {
+  group1_data <- data[[value_col]][data[[group_col]] == pair[1]] %>% na.omit()
+  group2_data <- data[[value_col]][data[[group_col]] == pair[2]] %>% na.omit()
+  
+  # 检查样本量
+  if(length(group1_data) < 2 | length(group2_data) < 2) {
+    return(NULL)
+  }
+  
+  # 观察到的均值差异
+  observed_diff <- mean(group2_data) - mean(group1_data)
+  
+  # 合并数据
+  combined <- c(group1_data, group2_data)
+  n2 <- length(group2_data)
+  
+  # 置换：随机打乱分组标签，计算均值差异
+  perm_diffs <- replicate(n_perm, {
+    perm_group2 <- sample(combined, size = n2)
+    perm_group1 <- sample(combined, size = length(group1_data))
+    mean(perm_group2) - mean(perm_group1)
+  })
+  
+  # 单侧p值：perm_diffs ≥ observed_diff的比例
+  p_value <- mean(perm_diffs >= observed_diff)
+  
+  # Bootstrap CI（稳健标准误）
+  boot_diffs <- replicate(2000, {
+    mean(sample(group2_data, replace = TRUE)) - mean(sample(group1_data, replace = TRUE))
+  })
+  
+  list(
+    comparison = paste(pair[2], "vs", pair[1]),
+    mean_diff = observed_diff,
+    p_value = p_value,
+    ci_lower = quantile(boot_diffs, 0.025),
+    ci_upper = quantile(boot_diffs, 0.975),
+    group1_n = length(group1_data),
+    group2_n = length(group2_data)
+  )
+}
+
+results <- lapply(comparison_pairs, function(pair) {
+  run_permutation_test(data_id, "identity_4level", "play_count", pair)
+}) %>% bind_rows()
+
+results_final <- results %>%
+  mutate(
+    p_adj = p.adjust(p_value, method = "bonferroni"),
+    sig = case_when(
+      p_adj < 0.001 ~ "***",
+      p_adj < 0.01 ~ "**",
+      p_adj < 0.05 ~ "*",
+      TRUE ~ "ns"
+    )
+  )
+
+cat("=== 置换检验结果（均值差异 + Bonferroni校正）===\n")
+print(results_final)
+
+ggplot(results_final, aes(x = comparison, y = mean_diff, fill = sig)) +
+  geom_col(alpha = 0.8) +
+  geom_errorbar(aes(ymin = ci_lower, ymax = ci_upper), width = 0.2) +
+  geom_text(aes(label = sig), color = "red", size = 5, vjust = -1) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "gray50") +
+  scale_fill_manual(values = c("***" = "red", "**" = "red", "*" = "red", "ns" = "gray80")) +
+  labs(
+    title = "身份价值差异：置换检验（Permutation Test）",
+    subtitle = "均值差异 + 95% Bootstrap CI | 红色=显著",
+    x = "比较组",
+    y = "均值差异",
+    fill = "显著性"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+
+###???
 identity_stats <- data.frame(
   Identity = c("Verification (认证用户)", "Talent (达人)", "Musician (音乐人)", "none(无)"),
   Avg_Play = c(
@@ -556,15 +803,14 @@ identity_stats <- data.frame(
   )
 )
 
-# 2. 绘图：独立身份对比图
+
 ggplot(identity_stats, aes(x = reorder(Identity, -Avg_Play), y = Avg_Play, fill = Identity)) +
   geom_col(width = 0.6) +
   geom_text(aes(label = comma(Avg_Play, accuracy = 1)), vjust = -0.5, size = 4) +
   scale_y_continuous(labels = comma, expand = expansion(mult = c(0, 0.15))) +
-  scale_fill_manual(values = c("black", "gray50", "#E74C3C", "#F1C40F")) + # 金银铜配色逻辑
+  scale_fill_manual(values = c("black", "gray50", "#E74C3C", "#F1C40F")) +
   labs(
-    title = "BY-CA类分析: 创作者身份价值评估 (Identity ROI)",
-    subtitle = "数据洞察：'认证用户' (V标) 的平均流量表现优于 '音乐人'",
+    title = "创作者身份价值评估 (Identity ROI)",
     x = "身份类型",
     y = "平均播放量"
   ) +
@@ -572,13 +818,19 @@ ggplot(identity_stats, aes(x = reorder(Identity, -Avg_Play), y = Avg_Play, fill 
   theme(legend.position = "none",
         plot.title = element_text(face = "bold", size = 14))
 
-###补一个期望的hypothesis test，主要说明只有verification能拉开显著差距，musician和talent影响低或者几乎无差别，跟none对比就行
 
 
 
 
-###模块9：时序分析
-## --- Part 1: C类 - 最佳发布时间分析 ---
+
+
+
+
+
+
+
+#====模块9：时序分析====
+###最佳发布时间分析
 
 # 1. 数据准备
 data_time_week <- data_cleaned %>%
@@ -608,39 +860,46 @@ ggplot(data_time_week, aes(x = day_of_week, y = avg_play, fill = day_of_week)) +
         plot.title = element_text(face = "bold", size = 14))
 
 
-###补一个月份的
-# 1. 数据准备
+# 1. 数据准备（优化版）
 data_time_month <- data_cleaned %>%
   mutate(
     create_dt = as_datetime(create_time),
-    # 将月份转化为有序因子 (1月到12月)
+    # 确保月份顺序：先获取数字月份，再转因子
+    month_num = month(create_dt),
     month_of_year = factor(month(create_dt, label = TRUE), 
-                           levels = month.abb)  # 确保1-12月顺序
+                           levels = month.abb)  # 保证1-12月顺序
   ) %>%
-  group_by(month_of_year) %>%
-  summarise(avg_play = mean(play_count, na.rm = TRUE))
+  group_by(month_of_year, month_num) %>%
+  summarise(avg_play = mean(play_count, na.rm = TRUE)) %>%
+  ungroup() %>%
+  arrange(month_num)  # 按月份排序
 
-# 2. 绘图：独立时间柱状图
+# 找出播放量最高的月份（用于动态副标题）
+top_month <- data_time_month %>%
+  slice_max(order_by = avg_play, n = 1) %>%
+  pull(month_of_year)
+
+# 2. 绘图（优化版）
 ggplot(data_time_month, aes(x = month_of_year, y = avg_play, fill = month_of_year)) +
   geom_col(alpha = 0.8) +
   # 在柱子上添加具体数值标签
   geom_text(aes(label = comma(avg_play, accuracy = 1)), vjust = -0.5, size = 3.5) +
-  scale_y_continuous(labels = comma, expand = expansion(mult = c(0, 0.1))) + # 让Y轴上方留白
+  scale_y_continuous(labels = comma, expand = expansion(mult = c(0, 0.1))) +
   scale_fill_brewer(palette = "Blues") +
   labs(
     title = "C类分析: 不同发布月份的流量差异 (Monthly Analysis)",
-    subtitle = "数据洞察：X月发布的歌单平均播放量最高 (季节性效应)",
+    subtitle = paste("数据洞察：", top_month, "发布的歌单平均播放量最高 (季节性效应)"),
     x = "发布时间 (月份)",
     y = "平均播放量 (Average Play Count)"
   ) +
   theme_minimal() +
   theme(legend.position = "none",
-        plot.title = element_text(face = "bold", size = 14))
-###好像有问题
+        plot.title = element_text(face = "bold", size = 14),
+        axis.text.x = element_text(angle = 45, hjust = 1))  # 月份标签倾斜，避免重叠
 
 
 
-###文本分析
+#====模块10：文本分析====
 # 1. 自动识别列名
 intro_cols <- grep("intro_", names(data_cleaned), value = TRUE)
 print(paste("已检测到简介特征列数量:", length(intro_cols)))
@@ -711,3 +970,8 @@ if(nrow(intro_impact) == 0) {
 }
 
 ### 看看能不能根据前面的标签做一下，可以根据热词图来写
+
+
+
+#====模块11：综合分析====
+
