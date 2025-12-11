@@ -15,6 +15,9 @@ library(randomForest)
 library(broom)
 library(car)
 library(moments)
+library(nnet)
+library(caret)
+library(reshape2)
 
 data <- read_csv("网易云音乐歌单分析/data.csv")
 
@@ -571,6 +574,35 @@ cat("解释方差比例: ", round(explained_variance * 100, 2), "%\n")
 
 
 
+# 计算每个聚类的边界范围
+calculate_cluster_bounds <- function(data_with_clusters, col_name) {
+  # 检查列是否存在
+  if (!col_name %in% names(data_with_clusters)) {
+    stop("指定的列名不存在于数据中。")
+  }
+  
+  # 提取聚类标签和数据列
+  clusters <- unique(data_with_clusters$cluster)
+  bounds <- data.frame(cluster = integer(), min_value = numeric(), max_value = numeric())
+  
+  for (cluster in clusters) {
+    cluster_data <- data_with_clusters[data_with_clusters$cluster == cluster, ]
+    min_value <- min(cluster_data[[col_name]])
+    max_value <- max(cluster_data[[col_name]])
+    
+    bounds <- rbind(bounds, data.frame(cluster = cluster, min_value = min_value, max_value = max_value))
+  }
+  
+  return(bounds)
+}
+
+# 计算聚类边界范围
+cluster_bounds <- calculate_cluster_bounds(data_clustered1, "play_count")
+
+# 输出每个聚类的边界范围
+cat("\n=== 每个聚类的边界范围 ===\n")
+print(cluster_bounds)
+
 
 
 
@@ -860,6 +892,56 @@ ggplot(data_time_week, aes(x = day_of_week, y = avg_play, fill = day_of_week)) +
         plot.title = element_text(face = "bold", size = 14))
 
 
+# 1. 数据准备（修正版）
+data_time_month <- data_cleaned %>%
+  mutate(
+    create_dt = as_datetime(create_time),
+    # 修正点1：直接使用 lubridate 的 label=TRUE，它会自动生成有序因子
+    # 只要不强制指定 levels = month.abb，就不会有中英文冲突
+    month_of_year = month(create_dt, label = TRUE, abbr = TRUE) 
+  ) %>%
+  # 修正点2：在 group_by 之前最好检查一下是否有 NA，虽然这步不是必须的
+  filter(!is.na(month_of_year)) %>%
+  group_by(month_of_year) %>%
+  summarise(avg_play = mean(play_count, na.rm = TRUE)) %>%
+  ungroup()
+
+# 找出播放量最高的月份（用于动态副标题）
+top_month_data <- data_time_month %>%
+  slice_max(order_by = avg_play, n = 1) 
+
+top_month_name <- top_month_data$month_of_year
+top_month_val  <- top_month_data$avg_play
+
+# 2. 绘图（修正版）
+ggplot(data_time_month, aes(x = month_of_year, y = avg_play)) +
+  # 修正点3：将 fill 映射给 avg_play (数值)，而不是月份 (分类)
+  # 这样可以避开 "Blues" 只有9种颜色的限制，且逻辑更佳：颜色越深播放量越高
+  geom_col(aes(fill = avg_play), alpha = 0.9) +
+  
+  # 在柱子上添加具体数值标签
+  geom_text(aes(label = comma(avg_play, accuracy = 1)), vjust = -0.5, size = 3.5) +
+  
+  # 修正点4：使用 distiller 处理连续数值的蓝色渐变 (direction=1 保证数值大颜色深)
+  scale_fill_distiller(palette = "Blues", direction = 1) +
+  
+  scale_y_continuous(labels = comma, expand = expansion(mult = c(0, 0.15))) +
+  
+  labs(
+    title = "C类分析: 不同发布月份的流量差异 (Monthly Analysis)",
+    subtitle = paste0("数据洞察：", top_month_name, " 发布的歌单平均播放量最高 (", comma(top_month_val), ")"),
+    x = "发布时间 (月份)",
+    y = "平均播放量 (Average Play Count)"
+  ) +
+  theme_minimal() +
+  theme(
+    legend.position = "none", # 隐藏图例，因为高度已经代表了数值
+    plot.title = element_text(face = "bold", size = 14),
+    axis.text.x = element_text(size = 10) 
+  )
+
+
+
 # 1. 数据准备（优化版）
 data_time_month <- data_cleaned %>%
   mutate(
@@ -899,79 +981,216 @@ ggplot(data_time_month, aes(x = month_of_year, y = avg_play, fill = month_of_yea
 
 
 
-#====模块10：文本分析====
-# 1. 自动识别列名
-intro_cols <- grep("intro_", names(data_cleaned), value = TRUE)
-print(paste("已检测到简介特征列数量:", length(intro_cols)))
 
-# --- 调试：看看第一列里到底是啥 ---
-# 这步能帮你确认有没有乱码
-first_col_preview <- head(data_cleaned[[intro_cols[1]]])
-print("【调试】第一列数据预览 (请检查是否为中文'是/否'):")
-print(first_col_preview)
 
-# 2. 循环计算 (加了去空格和模糊匹配)
-intro_impact <- data.frame(term = character(), avg_play = numeric(), count = numeric(), stringsAsFactors = FALSE)
 
-for(col in intro_cols) {
-  raw_val <- data_cleaned[[col]]
+
+# ====模块10：热词检测 (Text Analysis - Impact on Play Count)====
+
+
+# 定义一个函数来计算特定词汇列表对播放量的影响
+analyze_word_impact <- function(data, text_col, top_words_df, top_n = 20) {
+  # 取频数最高的前N个词
+  target_words <- head(top_words_df$Word, top_n)
   
-  # --- 核心修复 ---
-  if(is.character(raw_val) || is.factor(raw_val)) {
-    # 1. 强制转字符
-    char_val <- as.character(raw_val)
-    # 2. 去除前后空格
-    clean_val <- trimws(char_val)
-    # 3. 只要包含 "是" 就算 1 (兼容性最强)
-    val_col <- ifelse(grepl("是", clean_val), 1, 0)
-  } else {
-    # 如果本来就是数字 (1/0)
-    val_col <- as.numeric(raw_val)
+  impact_list <- list()
+  
+  for(word in target_words) {
+    has_word <- str_detect(data[[text_col]], fixed(word))
+    avg_play <- mean(data$play_count[has_word], na.rm = TRUE)
+    count <- sum(has_word, na.rm = TRUE)
+    
+    ### 当样本量足够时才统计(>5)
+    if(count > 5) {
+      impact_list[[word]] <- data.frame(
+        word = word,
+        avg_play = avg_play,
+        count = count
+      )
+    }
   }
   
-  # 统计出现次数
-  count_ones <- sum(val_col == 1, na.rm=TRUE)
-  
-  # 只有出现超过 10 次才统计 (样本太少没意义)
-  if(count_ones > 10) { 
-    avg <- mean(data_cleaned$play_count[val_col == 1], na.rm=TRUE)
-    intro_impact <- rbind(intro_impact, data.frame(term = col, avg_play = avg, count = count_ones))
-  }
+  result_df <- do.call(rbind, impact_list)
+  return(result_df)
 }
 
-# 3. 检查结果
-if(nrow(intro_impact) == 0) {
-  print("⚠️ 警告：结果为空！可能是编码问题导致无法识别中文'是'。")
-  print("尝试建议：请重新使用 encoding='GBK' 读取 data.csv")
-} else {
-  # 4. 绘图
-  top_intro <- intro_impact %>% 
-    arrange(desc(avg_play)) %>% 
-    head(16) %>%
-    mutate(term_clean = str_remove(term, "intro_"))
+# 1. 分析歌单名称(name)中的热词影响
+# 也就是利用你之前算好的 name_analysis 变量
+name_impact <- analyze_word_impact(data_cleaned, "name", name_analysis, top_n = 30)
+
+# 2. 分析简介(introduction)中的热词影响
+intro_word_impact <- analyze_word_impact(data_cleaned, "introduction", introduction_analysis, top_n = 30)
+
+# 3. 绘图：展示对播放量提升最大的歌单名热词
+if(!is.null(name_impact) && nrow(name_impact) > 0) {
+  name_impact_sorted <- name_impact %>% arrange(desc(avg_play)) %>% head(15)
   
-  p <- ggplot(top_intro, aes(x = avg_play, y = reorder(term_clean, avg_play))) +
-    geom_col(fill = "#8E44AD", alpha = 0.7) + 
-    geom_text(aes(label = comma(avg_play, accuracy = 1)), hjust = -0.1, size = 3.5) +
+  p_name_hot <- ggplot(name_impact_sorted, aes(x = avg_play, y = reorder(word, avg_play))) +
+    geom_col(fill = "#E67E22", alpha = 0.8) +
+    geom_text(aes(label = comma(avg_play, accuracy = 1)), hjust = -0.1, size = 3) +
     scale_x_continuous(labels = comma, expand = expansion(mult = c(0, 0.3))) +
     labs(
-      title = "AL-BB类分析: 简介文案的高价值词汇",
-      subtitle = "数据洞察：包含'收录/封面/专辑'的歌单平均播放量更高",
+      title = "Module 11: 歌单标题热词价值分析",
+      subtitle = "包含这些词汇的歌单具有更高的平均播放量",
+      x = "平均播放量",
+      y = "标题关键词"
+    ) +
+    theme_minimal()
+  print(p_name_hot)
+}
+
+# 4. 绘图：展示对播放量提升最大的简介热词
+if(!is.null(intro_word_impact) && nrow(intro_word_impact) > 0) {
+  intro_impact_sorted <- intro_word_impact %>% arrange(desc(avg_play)) %>% head(15)
+  
+  p_intro_hot <- ggplot(intro_impact_sorted, aes(x = avg_play, y = reorder(word, avg_play))) +
+    geom_col(fill = "#16A085", alpha = 0.8) +
+    geom_text(aes(label = comma(avg_play, accuracy = 1)), hjust = -0.1, size = 3) +
+    scale_x_continuous(labels = comma, expand = expansion(mult = c(0, 0.3))) +
+    labs(
+      title = "Module 11: 简介内容热词价值分析",
+      subtitle = "简介中包含这些词汇往往意味着更高的流量",
       x = "平均播放量",
       y = "简介关键词"
     ) +
-    theme_minimal() +
-    theme(
-      plot.title = element_text(face = "bold", size = 14),
-      axis.text.y = element_text(size = 11, face = "bold")
-    )
-  
-  print(p)
+    theme_minimal()
+  print(p_intro_hot)
 }
 
-### 看看能不能根据前面的标签做一下，可以根据热词图来写
+
+# ====模块11：神经网络预测以及error矩阵 (Neural Network Prediction)====
 
 
 
-#====模块11：综合分析====
+cat("\n=== 开始 Module 12: PCA 与 神经网络预测 ===\n")
+
+# 1. 数据准备：选择用于预测的数值型变量
+# 排除掉只有0/1的dummy变量，选择连续变量进行PCA
+# 注意：不能把 play_count 放进 PCA
+nn_data <- data_cleaned %>%
+  dplyr::select(
+    play_count, 
+    collect_count, share_count, comment_count, # 中间层/强相关变量
+    fans, grade, playlists,                # 作者特征
+    length_name, length_intro, number_songs, number_hot_singers # 歌单特征
+  ) %>%
+  na.omit()
+
+# 2. PCA分析 (提取主要特征值)
+# 针对作者特征和歌单特征进行降维，作为“底层”输入
+pca_features <- nn_data %>% 
+  dplyr::select(fans, grade, playlists, length_name, length_intro, number_songs, number_hot_singers)
+
+# 进行PCA，并进行标准化
+pca_res <- prcomp(pca_features, scale. = TRUE)
+
+# 查看解释方差，决定保留几个主成分（比如保留累计贡献>85%的，或者前3-4个）
+summary(pca_res)
+
+# 提取前4个主成分作为输入特征
+pca_scores <- as.data.frame(pca_res$x[, 1:4])
+names(pca_scores) <- c("PC1", "PC2", "PC3", "PC4")
+
+# 3. 构建神经网络数据集
+# 输入层 = PCA特征 (PC1-PC4) + 互动数据 (收藏/分享/评论)
+# 输出层 = play_count (做对数变换 log1p 以加速收敛)
+model_data <- cbind(
+  dplyr::select(nn_data, play_count, collect_count, share_count, comment_count), 
+  pca_scores
+)
+
+# 归一化/标准化数据 (神经网络对尺度非常敏感)
+# 使用 caret 的 preProcess
+preproc_values <- preProcess(model_data, method = c("center", "scale"))
+model_data_scaled <- predict(preproc_values, model_data)
+
+# 4. 划分训练集和测试集
+set.seed(123)
+train_index <- createDataPartition(model_data_scaled$play_count, p = 0.7, list = FALSE)
+train_set <- model_data_scaled[train_index, ]
+test_set <- model_data_scaled[-train_index, ]
+
+# 5. 训练神经网络
+# size = 隐层节点数, decay = 权重衰减(防止过拟合), linout = TRUE (因为是回归问题，输出要是线性的)
+# 公式：播放量 由 互动数据 和 PCA特征 共同决定
+nn_formula <- play_count ~ collect_count + share_count + comment_count + PC1 + PC2 + PC3 + PC4
+
+cat("正在训练神经网络...\n")
+# maxit 增加迭代次数以确保收敛
+nn_model <- nnet(nn_formula, data = train_set, size = 10, decay = 0.01, linout = TRUE, maxit = 500, trace = FALSE)
+
+# 6. 预测与评估
+predictions_scaled <- predict(nn_model, test_set)
+
+# 反归一化（还原真实的播放量数值，用于计算误差）
+# 这里需要手动反归一化，或者简单地看相关性。
+# 为了简单起见，我们计算标准化后的 RMSE，或者看预测值与真实值的相关性
+
+# 获取标准化参数
+play_count_mean <- mean(model_data$play_count)
+play_count_sd <- sd(model_data$play_count)
+
+# 反标准化预测值和真实值
+predictions_raw <- (predictions_scaled * play_count_sd) + play_count_mean
+test_set$play_count_raw <- (test_set$play_count * play_count_sd) + play_count_mean
+
+rmse_val <- sqrt(mean((predictions_raw - test_set$play_count_raw)^2))
+mae_val <- mean(abs(predictions_raw - test_set$play_count_raw))
+r2_val <- cor(predictions_raw, test_set$play_count_raw)^2
+
+cat("\n=== 神经网络模型评估 (原始数据) ===\n")
+cat("RMSE (均方根误差):", rmse_val, "\n")
+cat("MAE  (平均绝对误差):", mae_val, "\n")
+cat("R-squared (拟合优度):", r2_val, "\n")
+
+# 7. 绘制预测值 vs 真实值 (Error Matrix 可视化)
+pred_df <- data.frame(
+  Actual = test_set$play_count_raw,
+  Predicted = predictions_raw
+)
+
+ggplot(pred_df, aes(x = Actual, y = Predicted)) +
+  geom_point(alpha = 0.5, color = "purple") +
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "red") +
+  labs(
+    title = "Module 12: Neural Network Prediction Accuracy",
+    subtitle = paste("R-squared =", round(r2_val, 3), "| Red Line = Perfect Prediction"),
+    x = "Actual Play Count",
+    y = "Predicted Play Count"
+  ) +
+  theme_minimal()
+
+# 8. 生成误差矩阵 (Error Matrix / Confusion Matrix)
+# 计算分箱边界
+breaks <- c(0, 793134.5, 2269060.5, 4575695, 32119005)
+
+# 将真实值和预测值进行分箱
+actual_class <- cut(test_set$play_count_raw, breaks = breaks, labels = c("Low", "Medium", "High", "Very High"), include.lowest = TRUE)
+pred_class <- cut(predictions_raw, breaks = breaks, labels = c("Low", "Medium", "High", "Very High"), include.lowest = TRUE)
+
+# 生成误差矩阵
+error_matrix <- table(Predicted = pred_class, Actual = actual_class)
+
+cat("\n=== 误差矩阵 (Error Matrix) ===\n")
+print(error_matrix)
+
+# 9. 计算分类正确率 (Accuracy)
+accuracy <- sum(diag(error_matrix)) / sum(error_matrix)
+cat("\n基于分级的预测正确率 (Accuracy):", round(accuracy * 100, 2), "%\n")
+
+# 10. 可视化误差矩阵 (Heatmap)
+melted_cmat <- melt(error_matrix)
+
+ggplot(data = melted_cmat, aes(x = Actual, y = Predicted, fill = value)) +
+  geom_tile() +
+  geom_text(aes(label = value), color = "white", size = 5) +
+  scale_fill_gradient(low = "#3498DB", high = "#E74C3C") +
+  labs(
+    title = "Prediction Error Matrix (预测误差矩阵)",
+    subtitle = paste("通过将播放量划分为4个等级计算 | 正确率:", round(accuracy * 100, 2), "%"),
+    x = "真实等级 (Actual Level)",
+    y = "预测等级 (Predicted Level)",
+    fill = "数量"
+  ) +
+  theme_minimal()
 

@@ -311,7 +311,7 @@ library(broom)
 # --- 1. 数据准备 ---
 # 清洗 topics 列，移除多余符号
 tag_df <- df_clean %>%
-  select(play_count, fans, topics) %>%
+  dplyr::select(play_count, fans, topics) %>%
   mutate(topics = str_remove_all(topics, "\\[|\\]|'|\"| ")) %>%
   separate_rows(topics, sep = ",") %>%
   filter(topics != "")
