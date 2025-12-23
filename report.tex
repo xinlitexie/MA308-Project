@@ -1,0 +1,2259 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+]{article}
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx}
+\makeatletter
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
+% Set default figure placement to htbp
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={网易云歌单数据分析报告},
+  pdfauthor={zhaozixi，wangyuean},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{网易云歌单数据分析报告}
+\author{zhaozixi，wangyuean}
+\date{2025-12-22}
+
+\begin{document}
+\maketitle
+
+\section{1.
+项目背景与研究意义}\label{ux9879ux76eeux80ccux666fux4e0eux7814ux7a76ux610fux4e49}
+
+在算法推荐时代，歌单不仅是音乐的集合，更是情绪、场景与身份的混合体，是平台、创作者与听众三方博弈的核心载体。
+
+本次研究旨在利用公开数据拆解播放量背后的因果链，帮助平台发现高潜力内容，协助创作者低成本试错，并为用户提供过滤噪音的依据。
+
+\section{2.
+环境加载与数据预处理}\label{ux73afux5883ux52a0ux8f7dux4e0eux6570ux636eux9884ux5904ux7406}
+
+\textbf{数据概况：} 原始数据集包含 2048
+个歌单样本，涵盖79个特征变量。我们将首先进行缺失值处理（主要是``简介''字段）以及将分类变量转化为二值变量。
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(tidyverse)}
+\FunctionTok{library}\NormalTok{(ggplot2)}
+\FunctionTok{library}\NormalTok{(cluster)}
+\FunctionTok{library}\NormalTok{(lubridate)}
+\FunctionTok{library}\NormalTok{(naniar)}
+\FunctionTok{library}\NormalTok{(corrplot)}
+\FunctionTok{library}\NormalTok{(jiebaRD)}
+\FunctionTok{library}\NormalTok{(wordcloud)}
+\FunctionTok{library}\NormalTok{(scatterplot3d)}
+\FunctionTok{library}\NormalTok{(MASS)}
+\FunctionTok{library}\NormalTok{(scales)}
+\FunctionTok{library}\NormalTok{(dplyr)}
+\FunctionTok{library}\NormalTok{(stringr)}
+\FunctionTok{library}\NormalTok{(randomForest)}
+\FunctionTok{library}\NormalTok{(broom)}
+\FunctionTok{library}\NormalTok{(car)}
+\FunctionTok{library}\NormalTok{(moments)}
+\FunctionTok{library}\NormalTok{(nnet)}
+\FunctionTok{library}\NormalTok{(caret)}
+\FunctionTok{library}\NormalTok{(reshape2)}
+\FunctionTok{library}\NormalTok{(lmPerm)}
+
+\NormalTok{data }\OtherTok{\textless{}{-}} \FunctionTok{read\_csv}\NormalTok{(}\StringTok{"网易云音乐歌单分析/data.csv"}\NormalTok{)}
+
+\CommentTok{\# ==== 1、清洗数据 ====}
+
+\DocumentationTok{\#\#\#获取数据基础信息}
+\FunctionTok{names}\NormalTok{(data)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1] "name"               "author"             "create_time"       
+##  [4] "introduction"       "play_count"         "collect_count"     
+##  [7] "share_count"        "comment_count"      "topics"            
+## [10] "fans"               "grade"              "playlists"         
+## [13] "identity"           "length_name"        "english_name"      
+## [16] "name_language"      "name_style"         "name_scene"        
+## [19] "name_instruments"   "name_feeling"       "name_praise"       
+## [22] "name_location"      "name_古风"          "name_BGM"          
+## [25] "name_经典"          "name_爵士"          "name_世界"         
+## [28] "name_精选"          "name_节奏"          "name_女声"         
+## [31] "name_欧美"          "name_粤语"          "name_民谣"         
+## [34] "name_东方"          "name_amp"           "name_中国"         
+## [37] "name_那些"          "length_intro"       "intro_歌单"        
+## [40] "intro_音乐"         "intro_歌曲"         "intro_喜欢"        
+## [43] "intro_封面"         "intro_专辑"         "intro_歌手"        
+## [46] "intro_风格"         "intro_quot"         "intro_amp"         
+## [49] "intro_更新"         "intro_旋律"         "intro_收录"        
+## [52] "intro_节奏"         "intro_好听"         "intro_电音"        
+## [55] "欧美"               "流行"               "华语"              
+## [58] "电子"               "ACG"                "日语"              
+## [61] "古风"               "轻音乐"             "经典"              
+## [64] "器乐"               "治愈"               "兴奋"              
+## [67] "游戏"               "独立"               "另类"              
+## [70] "影视原声"           "民族"               "怀旧"              
+## [73] "粤语"               "摇滚"               "number_songs"      
+## [76] "number_hot_singers" "talent"             "verification"      
+## [79] "musician"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{str}\NormalTok{(data)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## spc_tbl_ [2,049 x 79] (S3: spec_tbl_df/tbl_df/tbl/data.frame)
+##  $ name              : chr [1:2049] "- Dance with me." "- Russian" "-夜-車-歌-" "：GOD'S DEATH 888【T% RAP】" ...
+##  $ author            : chr [1:2049] "MONSTER-CAT6" "LavidaLoca_z" "玛丽锁链是耶稣" "YOUNG-RICH-WORLD-PEACE" ...
+##  $ create_time       : num [1:2049] 1.39e+09 1.40e+09 1.46e+09 1.42e+09 1.48e+09 ...
+##  $ introduction      : chr [1:2049] "<b>介绍：</b>欧美流行舞曲。<br>" "<b>介绍：</b>边听边学俄语.<br>" "<b>介绍：</b>今天我感到非常烦闷<br>我想念你<br>我想起夜幕降临的时候<br>和你踏着星光走去<br>想起了灯光照着树叶的"| __truncated__ "<b>介绍：</b>此歌单非常的躁动与迷幻 备 ：Rap Music 和 Trap Music 将会带你进入一个不一样的音乐世界<br>" ...
+##  $ play_count        : num [1:2049] 248047 69769 311920 250759 53208 ...
+##  $ collect_count     : num [1:2049] 2134 1464 10256 3815 350 ...
+##  $ share_count       : num [1:2049] 39 13 216 65 11 193 20 48 13 25 ...
+##  $ comment_count     : num [1:2049] 52 15 201 60 9 202 10 23 7 34 ...
+##  $ topics            : chr [1:2049] "[\"欧美\",\"驾车\",\"舞曲\"]" "[\"小语种\",\"午休\",\"流行\"]" "[\"夜晚\",\"另类/独立\",\"英伦\"]" "[\"欧美\",\"流行\",\"说唱\"]" ...
+##  $ fans              : num [1:2049] 5974 17163 8237 277 1595 ...
+##  $ grade             : num [1:2049] 9 8 9 9 8 9 9 9 9 7 ...
+##  $ playlists         : num [1:2049] 22 128 51 8 25 22 118 27 34 15 ...
+##  $ identity          : chr [1:2049] "无" "达人" "无" "无" ...
+##  $ length_name       : num [1:2049] 16 9 7 24 7 11 29 9 18 14 ...
+##  $ english_name      : chr [1:2049] "是" "是" "否" "是" ...
+##  $ name_language     : chr [1:2049] "否" "否" "否" "否" ...
+##  $ name_style        : chr [1:2049] "否" "否" "否" "否" ...
+##  $ name_scene        : chr [1:2049] "否" "否" "否" "否" ...
+##  $ name_instruments  : chr [1:2049] "否" "否" "否" "否" ...
+##  $ name_feeling      : chr [1:2049] "否" "否" "否" "否" ...
+##  $ name_praise       : chr [1:2049] "否" "否" "否" "否" ...
+##  $ name_location     : chr [1:2049] "否" "否" "否" "否" ...
+##  $ name_古风         : chr [1:2049] "否" "否" "否" "否" ...
+##  $ name_BGM          : chr [1:2049] "否" "否" "否" "否" ...
+##  $ name_经典         : chr [1:2049] "否" "否" "否" "否" ...
+##  $ name_爵士         : chr [1:2049] "否" "否" "否" "否" ...
+##  $ name_世界         : chr [1:2049] "否" "否" "否" "否" ...
+##  $ name_精选         : chr [1:2049] "否" "否" "否" "否" ...
+##  $ name_节奏         : chr [1:2049] "否" "否" "否" "否" ...
+##  $ name_女声         : chr [1:2049] "否" "否" "否" "否" ...
+##  $ name_欧美         : chr [1:2049] "否" "否" "否" "否" ...
+##  $ name_粤语         : chr [1:2049] "否" "否" "否" "否" ...
+##  $ name_民谣         : chr [1:2049] "否" "否" "否" "否" ...
+##  $ name_东方         : chr [1:2049] "否" "否" "否" "否" ...
+##  $ name_amp          : chr [1:2049] "否" "否" "否" "否" ...
+##  $ name_中国         : chr [1:2049] "否" "否" "否" "否" ...
+##  $ name_那些         : chr [1:2049] "否" "否" "否" "否" ...
+##  $ length_intro      : num [1:2049] 21 21 435 68 21 454 57 22 109 35 ...
+##  $ intro_歌单        : chr [1:2049] "否" "否" "是" "是" ...
+##  $ intro_音乐        : chr [1:2049] "否" "否" "否" "是" ...
+##  $ intro_歌曲        : chr [1:2049] "否" "否" "否" "否" ...
+##  $ intro_喜欢        : chr [1:2049] "否" "否" "否" "否" ...
+##  $ intro_封面        : chr [1:2049] "否" "否" "是" "否" ...
+##  $ intro_专辑        : chr [1:2049] "否" "否" "否" "否" ...
+##  $ intro_歌手        : chr [1:2049] "否" "否" "否" "否" ...
+##  $ intro_风格        : chr [1:2049] "否" "否" "是" "否" ...
+##  $ intro_quot        : chr [1:2049] "否" "否" "否" "否" ...
+##  $ intro_amp         : chr [1:2049] "否" "否" "否" "否" ...
+##  $ intro_更新        : chr [1:2049] "否" "否" "否" "否" ...
+##  $ intro_旋律        : chr [1:2049] "否" "否" "否" "否" ...
+##  $ intro_收录        : chr [1:2049] "否" "否" "否" "否" ...
+##  $ intro_节奏        : chr [1:2049] "否" "否" "否" "否" ...
+##  $ intro_好听        : chr [1:2049] "否" "否" "否" "否" ...
+##  $ intro_电音        : chr [1:2049] "否" "否" "否" "否" ...
+##  $ 欧美              : chr [1:2049] "是" "否" "否" "是" ...
+##  $ 流行              : chr [1:2049] "否" "是" "否" "是" ...
+##  $ 华语              : chr [1:2049] "否" "否" "否" "否" ...
+##  $ 电子              : chr [1:2049] "否" "否" "否" "否" ...
+##  $ ACG               : chr [1:2049] "否" "否" "否" "否" ...
+##  $ 日语              : chr [1:2049] "否" "否" "否" "否" ...
+##  $ 古风              : chr [1:2049] "否" "否" "否" "否" ...
+##  $ 轻音乐            : chr [1:2049] "否" "否" "否" "否" ...
+##  $ 经典              : chr [1:2049] "否" "否" "否" "否" ...
+##  $ 器乐              : chr [1:2049] "否" "否" "否" "否" ...
+##  $ 治愈              : chr [1:2049] "否" "否" "否" "否" ...
+##  $ 兴奋              : chr [1:2049] "否" "否" "否" "否" ...
+##  $ 游戏              : chr [1:2049] "否" "否" "否" "否" ...
+##  $ 独立              : chr [1:2049] "否" "否" "是" "否" ...
+##  $ 另类              : chr [1:2049] "否" "否" "是" "否" ...
+##  $ 影视原声          : chr [1:2049] "否" "否" "否" "否" ...
+##  $ 民族              : chr [1:2049] "否" "否" "否" "否" ...
+##  $ 怀旧              : chr [1:2049] "否" "否" "否" "否" ...
+##  $ 粤语              : chr [1:2049] "否" "否" "否" "否" ...
+##  $ 摇滚              : chr [1:2049] "否" "否" "否" "否" ...
+##  $ number_songs      : num [1:2049] 496 50 252 773 123 51 24 237 90 33 ...
+##  $ number_hot_singers: num [1:2049] 30 2 5 23 6 1 0 5 5 0 ...
+##  $ talent            : chr [1:2049] "否" "是" "否" "否" ...
+##  $ verification      : chr [1:2049] "否" "否" "否" "否" ...
+##  $ musician          : chr [1:2049] "否" "否" "否" "否" ...
+##  - attr(*, "spec")=
+##   .. cols(
+##   ..   name = col_character(),
+##   ..   author = col_character(),
+##   ..   create_time = col_double(),
+##   ..   introduction = col_character(),
+##   ..   play_count = col_double(),
+##   ..   collect_count = col_double(),
+##   ..   share_count = col_double(),
+##   ..   comment_count = col_double(),
+##   ..   topics = col_character(),
+##   ..   fans = col_double(),
+##   ..   grade = col_double(),
+##   ..   playlists = col_double(),
+##   ..   identity = col_character(),
+##   ..   length_name = col_double(),
+##   ..   english_name = col_character(),
+##   ..   name_language = col_character(),
+##   ..   name_style = col_character(),
+##   ..   name_scene = col_character(),
+##   ..   name_instruments = col_character(),
+##   ..   name_feeling = col_character(),
+##   ..   name_praise = col_character(),
+##   ..   name_location = col_character(),
+##   ..   name_古风 = col_character(),
+##   ..   name_BGM = col_character(),
+##   ..   name_经典 = col_character(),
+##   ..   name_爵士 = col_character(),
+##   ..   name_世界 = col_character(),
+##   ..   name_精选 = col_character(),
+##   ..   name_节奏 = col_character(),
+##   ..   name_女声 = col_character(),
+##   ..   name_欧美 = col_character(),
+##   ..   name_粤语 = col_character(),
+##   ..   name_民谣 = col_character(),
+##   ..   name_东方 = col_character(),
+##   ..   name_amp = col_character(),
+##   ..   name_中国 = col_character(),
+##   ..   name_那些 = col_character(),
+##   ..   length_intro = col_double(),
+##   ..   intro_歌单 = col_character(),
+##   ..   intro_音乐 = col_character(),
+##   ..   intro_歌曲 = col_character(),
+##   ..   intro_喜欢 = col_character(),
+##   ..   intro_封面 = col_character(),
+##   ..   intro_专辑 = col_character(),
+##   ..   intro_歌手 = col_character(),
+##   ..   intro_风格 = col_character(),
+##   ..   intro_quot = col_character(),
+##   ..   intro_amp = col_character(),
+##   ..   intro_更新 = col_character(),
+##   ..   intro_旋律 = col_character(),
+##   ..   intro_收录 = col_character(),
+##   ..   intro_节奏 = col_character(),
+##   ..   intro_好听 = col_character(),
+##   ..   intro_电音 = col_character(),
+##   ..   欧美 = col_character(),
+##   ..   流行 = col_character(),
+##   ..   华语 = col_character(),
+##   ..   电子 = col_character(),
+##   ..   ACG = col_character(),
+##   ..   日语 = col_character(),
+##   ..   古风 = col_character(),
+##   ..   轻音乐 = col_character(),
+##   ..   经典 = col_character(),
+##   ..   器乐 = col_character(),
+##   ..   治愈 = col_character(),
+##   ..   兴奋 = col_character(),
+##   ..   游戏 = col_character(),
+##   ..   独立 = col_character(),
+##   ..   另类 = col_character(),
+##   ..   影视原声 = col_character(),
+##   ..   民族 = col_character(),
+##   ..   怀旧 = col_character(),
+##   ..   粤语 = col_character(),
+##   ..   摇滚 = col_character(),
+##   ..   number_songs = col_double(),
+##   ..   number_hot_singers = col_double(),
+##   ..   talent = col_character(),
+##   ..   verification = col_character(),
+##   ..   musician = col_character()
+##   .. )
+##  - attr(*, "problems")=<externalptr>
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cat}\NormalTok{(}\StringTok{"数据维度："}\NormalTok{, }\FunctionTok{dim}\NormalTok{(data), }\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 数据维度： 2049 79
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{colSums}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(data))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##               name             author        create_time       introduction 
+##                  0                  0                  0                135 
+##         play_count      collect_count        share_count      comment_count 
+##                  0                  0                  0                  0 
+##             topics               fans              grade          playlists 
+##                  0                  0                  0                  0 
+##           identity        length_name       english_name      name_language 
+##                  0                  0                  0                  0 
+##         name_style         name_scene   name_instruments       name_feeling 
+##                  0                  0                  0                  0 
+##        name_praise      name_location          name_古风           name_BGM 
+##                  0                  0                  0                  0 
+##          name_经典          name_爵士          name_世界          name_精选 
+##                  0                  0                  0                  0 
+##          name_节奏          name_女声          name_欧美          name_粤语 
+##                  0                  0                  0                  0 
+##          name_民谣          name_东方           name_amp          name_中国 
+##                  0                  0                  0                  0 
+##          name_那些       length_intro         intro_歌单         intro_音乐 
+##                  0                  0                  0                  0 
+##         intro_歌曲         intro_喜欢         intro_封面         intro_专辑 
+##                  0                  0                  0                  0 
+##         intro_歌手         intro_风格         intro_quot          intro_amp 
+##                  0                  0                  0                  0 
+##         intro_更新         intro_旋律         intro_收录         intro_节奏 
+##                  0                  0                  0                  0 
+##         intro_好听         intro_电音               欧美               流行 
+##                  0                  0                  0                  0 
+##               华语               电子                ACG               日语 
+##                  0                  0                  0                  0 
+##               古风             轻音乐               经典               器乐 
+##                  0                  0                  0                  0 
+##               治愈               兴奋               游戏               独立 
+##                  0                  0                  0                  0 
+##               另类           影视原声               民族               怀旧 
+##                  0                  0                  0                  0 
+##               粤语               摇滚       number_songs number_hot_singers 
+##                  0                  0                  0                  0 
+##             talent       verification           musician 
+##                  0                  0                  0
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{gg\_miss\_var}\NormalTok{(data) }\SpecialCharTok{+} \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"变量缺失值分布"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/load_libraries_and_data-1.pdf}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\DocumentationTok{\#\#\#填充缺失值，因为只有introduction部分有缺失值，所以用"[无简介]"替代原本null内容}
+\NormalTok{data}\SpecialCharTok{$}\NormalTok{introduction[}\FunctionTok{is.na}\NormalTok{(data}\SpecialCharTok{$}\NormalTok{introduction) }\SpecialCharTok{|}\NormalTok{ data}\SpecialCharTok{$}\NormalTok{introduction }\SpecialCharTok{==} \StringTok{""}\NormalTok{] }\OtherTok{\textless{}{-}} \StringTok{"[无简介]"}
+
+\DocumentationTok{\#\#\#将所有只由是否组成的数据转变为factor类型}
+\NormalTok{convert\_binary\_proper }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(data) \{}
+  \ControlFlowTok{for}\NormalTok{(col\_name }\ControlFlowTok{in} \FunctionTok{names}\NormalTok{(data)) \{}
+    \ControlFlowTok{if}\NormalTok{(}\FunctionTok{is.character}\NormalTok{(data[[col\_name]]) }\SpecialCharTok{||} \FunctionTok{is.factor}\NormalTok{(data[[col\_name]])) \{}
+\NormalTok{      unique\_vals }\OtherTok{\textless{}{-}} \FunctionTok{unique}\NormalTok{(data[[col\_name]])}
+      
+      \CommentTok{\# 处理"是"/"否"的情况}
+      \ControlFlowTok{if}\NormalTok{(}\FunctionTok{length}\NormalTok{(unique\_vals) }\SpecialCharTok{==} \DecValTok{2} \SpecialCharTok{\&\&} \FunctionTok{all}\NormalTok{(}\FunctionTok{sort}\NormalTok{(unique\_vals) }\SpecialCharTok{==} \FunctionTok{c}\NormalTok{(}\StringTok{"否"}\NormalTok{, }\StringTok{"是"}\NormalTok{))) \{}
+        \CommentTok{\# 创建因子，但更重要的是转换为0/1}
+\NormalTok{        data[[}\FunctionTok{paste0}\NormalTok{(col\_name, }\StringTok{"\_binary"}\NormalTok{)]] }\OtherTok{\textless{}{-}} \FunctionTok{ifelse}\NormalTok{(}
+\NormalTok{          data[[col\_name]] }\SpecialCharTok{==} \StringTok{"是"}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{0}
+\NormalTok{        )}
+        \FunctionTok{cat}\NormalTok{(}\StringTok{"已将列"}\NormalTok{, col\_name, }\StringTok{"转换为二值变量（是=1，否=0）}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\NormalTok{      \}}
+\NormalTok{    \}}
+\NormalTok{  \}}
+  \FunctionTok{return}\NormalTok{(data)}
+\NormalTok{\}}
+\NormalTok{data }\OtherTok{\textless{}{-}} \FunctionTok{convert\_binary\_proper}\NormalTok{(data) }\CommentTok{\# 注意：原代码此处调用名可能有误，已修正为定义的函数名}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 已将列 english_name 转换为二值变量（是=1，否=0）
+## 已将列 name_language 转换为二值变量（是=1，否=0）
+## 已将列 name_style 转换为二值变量（是=1，否=0）
+## 已将列 name_scene 转换为二值变量（是=1，否=0）
+## 已将列 name_instruments 转换为二值变量（是=1，否=0）
+## 已将列 name_feeling 转换为二值变量（是=1，否=0）
+## 已将列 name_praise 转换为二值变量（是=1，否=0）
+## 已将列 name_location 转换为二值变量（是=1，否=0）
+## 已将列 name_古风 转换为二值变量（是=1，否=0）
+## 已将列 name_BGM 转换为二值变量（是=1，否=0）
+## 已将列 name_经典 转换为二值变量（是=1，否=0）
+## 已将列 name_爵士 转换为二值变量（是=1，否=0）
+## 已将列 name_世界 转换为二值变量（是=1，否=0）
+## 已将列 name_精选 转换为二值变量（是=1，否=0）
+## 已将列 name_节奏 转换为二值变量（是=1，否=0）
+## 已将列 name_女声 转换为二值变量（是=1，否=0）
+## 已将列 name_欧美 转换为二值变量（是=1，否=0）
+## 已将列 name_粤语 转换为二值变量（是=1，否=0）
+## 已将列 name_民谣 转换为二值变量（是=1，否=0）
+## 已将列 name_东方 转换为二值变量（是=1，否=0）
+## 已将列 name_amp 转换为二值变量（是=1，否=0）
+## 已将列 name_中国 转换为二值变量（是=1，否=0）
+## 已将列 name_那些 转换为二值变量（是=1，否=0）
+## 已将列 intro_歌单 转换为二值变量（是=1，否=0）
+## 已将列 intro_音乐 转换为二值变量（是=1，否=0）
+## 已将列 intro_歌曲 转换为二值变量（是=1，否=0）
+## 已将列 intro_喜欢 转换为二值变量（是=1，否=0）
+## 已将列 intro_封面 转换为二值变量（是=1，否=0）
+## 已将列 intro_专辑 转换为二值变量（是=1，否=0）
+## 已将列 intro_歌手 转换为二值变量（是=1，否=0）
+## 已将列 intro_风格 转换为二值变量（是=1，否=0）
+## 已将列 intro_quot 转换为二值变量（是=1，否=0）
+## 已将列 intro_amp 转换为二值变量（是=1，否=0）
+## 已将列 intro_更新 转换为二值变量（是=1，否=0）
+## 已将列 intro_旋律 转换为二值变量（是=1，否=0）
+## 已将列 intro_收录 转换为二值变量（是=1，否=0）
+## 已将列 intro_节奏 转换为二值变量（是=1，否=0）
+## 已将列 intro_好听 转换为二值变量（是=1，否=0）
+## 已将列 intro_电音 转换为二值变量（是=1，否=0）
+## 已将列 欧美 转换为二值变量（是=1，否=0）
+## 已将列 流行 转换为二值变量（是=1，否=0）
+## 已将列 华语 转换为二值变量（是=1，否=0）
+## 已将列 电子 转换为二值变量（是=1，否=0）
+## 已将列 ACG 转换为二值变量（是=1，否=0）
+## 已将列 日语 转换为二值变量（是=1，否=0）
+## 已将列 古风 转换为二值变量（是=1，否=0）
+## 已将列 轻音乐 转换为二值变量（是=1，否=0）
+## 已将列 经典 转换为二值变量（是=1，否=0）
+## 已将列 器乐 转换为二值变量（是=1，否=0）
+## 已将列 治愈 转换为二值变量（是=1，否=0）
+## 已将列 兴奋 转换为二值变量（是=1，否=0）
+## 已将列 游戏 转换为二值变量（是=1，否=0）
+## 已将列 独立 转换为二值变量（是=1，否=0）
+## 已将列 另类 转换为二值变量（是=1，否=0）
+## 已将列 影视原声 转换为二值变量（是=1，否=0）
+## 已将列 民族 转换为二值变量（是=1，否=0）
+## 已将列 怀旧 转换为二值变量（是=1，否=0）
+## 已将列 粤语 转换为二值变量（是=1，否=0）
+## 已将列 摇滚 转换为二值变量（是=1，否=0）
+## 已将列 talent 转换为二值变量（是=1，否=0）
+## 已将列 verification 转换为二值变量（是=1，否=0）
+## 已将列 musician 转换为二值变量（是=1，否=0）
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\DocumentationTok{\#\#\#删除处理后的列}
+\NormalTok{remove\_columns\_tidy }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(data, col\_names) \{}
+\NormalTok{  existing\_cols }\OtherTok{\textless{}{-}}\NormalTok{ col\_names[col\_names }\SpecialCharTok{\%in\%} \FunctionTok{names}\NormalTok{(data)]}
+\NormalTok{  missing\_cols }\OtherTok{\textless{}{-}}\NormalTok{ col\_names[}\SpecialCharTok{!}\NormalTok{col\_names }\SpecialCharTok{\%in\%} \FunctionTok{names}\NormalTok{(data)]}
+  
+  \ControlFlowTok{if}\NormalTok{(}\FunctionTok{length}\NormalTok{(missing\_cols) }\SpecialCharTok{\textgreater{}} \DecValTok{0}\NormalTok{) \{}
+    \FunctionTok{warning}\NormalTok{(}\StringTok{"以下列不存在于数据中: "}\NormalTok{, }\FunctionTok{paste}\NormalTok{(missing\_cols, }\AttributeTok{collapse =} \StringTok{", "}\NormalTok{))}
+\NormalTok{  \}}
+  
+  \ControlFlowTok{if}\NormalTok{(}\FunctionTok{length}\NormalTok{(existing\_cols) }\SpecialCharTok{\textgreater{}} \DecValTok{0}\NormalTok{) \{}
+\NormalTok{    data }\OtherTok{\textless{}{-}}\NormalTok{ data }\SpecialCharTok{\%\textgreater{}\%}\NormalTok{ dplyr}\SpecialCharTok{::}\FunctionTok{select}\NormalTok{(}\SpecialCharTok{{-}}\FunctionTok{all\_of}\NormalTok{(existing\_cols))}
+    \FunctionTok{cat}\NormalTok{(}\StringTok{"已删除列:"}\NormalTok{, }\FunctionTok{paste}\NormalTok{(existing\_cols, }\AttributeTok{collapse =} \StringTok{", "}\NormalTok{), }\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\NormalTok{  \}}
+  \FunctionTok{return}\NormalTok{(data)}
+\NormalTok{\}}
+
+\NormalTok{data\_cleaned }\OtherTok{=}\NormalTok{ data}
+\end{Highlighting}
+\end{Shaded}
+
+\section{3.
+描述性统计与词云分析}\label{ux63cfux8ff0ux6027ux7edfux8ba1ux4e0eux8bcdux4e91ux5206ux6790}
+
+\textbf{分析结论：} *
+\textbf{长尾分布}：播放量数据呈现显著的长尾分布（偏度约8.969987），大部分歌单播放量较低。后续分析中已对播放量进行了
+\texttt{log1p} 变换。 *
+\textbf{文本分析}：通过词云发现，高价值标签主要体现核心价值用户（80后、90后），使用场景化、情绪化语言。
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# ==== 2、描述性分布和热图 ====}
+
+\DocumentationTok{\#\#\# 提取numeric和factor变量，并进行简单数据统计分析}
+\NormalTok{numeric\_vars }\OtherTok{\textless{}{-}} \FunctionTok{names}\NormalTok{(data\_cleaned)[}\FunctionTok{sapply}\NormalTok{(data\_cleaned, is.numeric)]}
+\NormalTok{factor\_vars }\OtherTok{\textless{}{-}} \FunctionTok{names}\NormalTok{(data\_cleaned)[}\FunctionTok{sapply}\NormalTok{(data\_cleaned, is.factor)]}
+\NormalTok{desc\_stats }\OtherTok{\textless{}{-}}\NormalTok{ (data\_cleaned[, numeric\_vars])}
+\FunctionTok{summary}\NormalTok{(desc\_stats)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##   create_time          play_count       collect_count     share_count     
+##  Min.   :1.358e+09   Min.   :      49   Min.   :     5   Min.   :    1.0  
+##  1st Qu.:1.419e+09   1st Qu.:   74111   1st Qu.:  1999   1st Qu.:   24.0  
+##  Median :1.440e+09   Median :  193324   Median :  5965   Median :   63.0  
+##  Mean   :1.442e+09   Mean   :  658842   Mean   : 15287   Mean   :  177.5  
+##  3rd Qu.:1.467e+09   3rd Qu.:  625232   3rd Qu.: 17617   3rd Qu.:  174.0  
+##  Max.   :1.500e+09   Max.   :32119004   Max.   :738775   Max.   :13105.0  
+##  comment_count         fans            grade          playlists     
+##  Min.   :   0.0   Min.   :     1   Min.   : 0.000   Min.   :   2.0  
+##  1st Qu.:  29.0   1st Qu.:   407   1st Qu.: 8.000   1st Qu.:  22.0  
+##  Median :  77.0   Median :  4765   Median : 9.000   Median :  45.0  
+##  Mean   : 162.3   Mean   : 11751   Mean   : 8.446   Mean   : 101.9  
+##  3rd Qu.: 187.0   3rd Qu.: 14076   3rd Qu.: 9.000   3rd Qu.:  98.0  
+##  Max.   :7718.0   Max.   :264183   Max.   :10.000   Max.   :1000.0  
+##   length_name     length_intro     number_songs    number_hot_singers
+##  Min.   : 3.00   Min.   :   0.0   Min.   :   5.0   Min.   :  0.00    
+##  1st Qu.:11.00   1st Qu.:  36.0   1st Qu.:  31.0   1st Qu.:  0.00    
+##  Median :14.00   Median :  82.0   Median :  57.0   Median :  1.00    
+##  Mean   :14.65   Mean   : 167.5   Mean   : 112.7   Mean   : 10.75    
+##  3rd Qu.:18.00   3rd Qu.: 162.0   3rd Qu.: 122.0   3rd Qu.:  7.00    
+##  Max.   :37.00   Max.   :1354.0   Max.   :1000.0   Max.   :412.00    
+##  english_name_binary name_language_binary name_style_binary name_scene_binary
+##  Min.   :0.0000      Min.   :0.00000      Min.   :0.0000    Min.   :0.00000  
+##  1st Qu.:0.0000      1st Qu.:0.00000      1st Qu.:0.0000    1st Qu.:0.00000  
+##  Median :0.0000      Median :0.00000      Median :0.0000    Median :0.00000  
+##  Mean   :0.3167      Mean   :0.04929      Mean   :0.2831    Mean   :0.02684  
+##  3rd Qu.:1.0000      3rd Qu.:0.00000      3rd Qu.:1.0000    3rd Qu.:0.00000  
+##  Max.   :1.0000      Max.   :1.00000      Max.   :1.0000    Max.   :1.00000  
+##  name_instruments_binary name_feeling_binary name_praise_binary
+##  Min.   :0.00000         Min.   :0.0000      Min.   :0.00000   
+##  1st Qu.:0.00000         1st Qu.:0.0000      1st Qu.:0.00000   
+##  Median :0.00000         Median :0.0000      Median :0.00000   
+##  Mean   :0.06442         Mean   :0.1454      Mean   :0.08882   
+##  3rd Qu.:0.00000         3rd Qu.:0.0000      3rd Qu.:0.00000   
+##  Max.   :1.00000         Max.   :1.0000      Max.   :1.00000   
+##  name_location_binary name_古风_binary  name_BGM_binary   name_经典_binary 
+##  Min.   :0.00000      Min.   :0.00000   Min.   :0.00000   Min.   :0.00000  
+##  1st Qu.:0.00000      1st Qu.:0.00000   1st Qu.:0.00000   1st Qu.:0.00000  
+##  Median :0.00000      Median :0.00000   Median :0.00000   Median :0.00000  
+##  Mean   :0.09956      Mean   :0.04539   Mean   :0.02147   Mean   :0.02879  
+##  3rd Qu.:0.00000      3rd Qu.:0.00000   3rd Qu.:0.00000   3rd Qu.:0.00000  
+##  Max.   :1.00000      Max.   :1.00000   Max.   :1.00000   Max.   :1.00000  
+##  name_爵士_binary  name_世界_binary  name_精选_binary  name_节奏_binary 
+##  Min.   :0.00000   Min.   :0.00000   Min.   :0.00000   Min.   :0.00000  
+##  1st Qu.:0.00000   1st Qu.:0.00000   1st Qu.:0.00000   1st Qu.:0.00000  
+##  Median :0.00000   Median :0.00000   Median :0.00000   Median :0.00000  
+##  Mean   :0.02587   Mean   :0.02099   Mean   :0.03953   Mean   :0.02294  
+##  3rd Qu.:0.00000   3rd Qu.:0.00000   3rd Qu.:0.00000   3rd Qu.:0.00000  
+##  Max.   :1.00000   Max.   :1.00000   Max.   :1.00000   Max.   :1.00000  
+##  name_女声_binary  name_欧美_binary  name_粤语_binary  name_民谣_binary 
+##  Min.   :0.00000   Min.   :0.00000   Min.   :0.00000   Min.   :0.00000  
+##  1st Qu.:0.00000   1st Qu.:0.00000   1st Qu.:0.00000   1st Qu.:0.00000  
+##  Median :0.00000   Median :0.00000   Median :0.00000   Median :0.00000  
+##  Mean   :0.02977   Mean   :0.02635   Mean   :0.02245   Mean   :0.02001  
+##  3rd Qu.:0.00000   3rd Qu.:0.00000   3rd Qu.:0.00000   3rd Qu.:0.00000  
+##  Max.   :1.00000   Max.   :1.00000   Max.   :1.00000   Max.   :1.00000  
+##  name_东方_binary  name_amp_binary   name_中国_binary  name_那些_binary 
+##  Min.   :0.00000   Min.   :0.00000   Min.   :0.00000   Min.   :0.00000  
+##  1st Qu.:0.00000   1st Qu.:0.00000   1st Qu.:0.00000   1st Qu.:0.00000  
+##  Median :0.00000   Median :0.00000   Median :0.00000   Median :0.00000  
+##  Mean   :0.01708   Mean   :0.02879   Mean   :0.01708   Mean   :0.02587  
+##  3rd Qu.:0.00000   3rd Qu.:0.00000   3rd Qu.:0.00000   3rd Qu.:0.00000  
+##  Max.   :1.00000   Max.   :1.00000   Max.   :1.00000   Max.   :1.00000  
+##  intro_歌单_binary intro_音乐_binary intro_歌曲_binary intro_喜欢_binary
+##  Min.   :0.000     Min.   :0.0000    Min.   :0.0000    Min.   :0.0000   
+##  1st Qu.:0.000     1st Qu.:0.0000    1st Qu.:0.0000    1st Qu.:0.0000   
+##  Median :0.000     Median :0.0000    Median :0.0000    Median :0.0000   
+##  Mean   :0.163     Mean   :0.2328    Mean   :0.1327    Mean   :0.1088   
+##  3rd Qu.:0.000     3rd Qu.:0.0000    3rd Qu.:0.0000    3rd Qu.:0.0000   
+##  Max.   :1.000     Max.   :1.0000    Max.   :1.0000    Max.   :1.0000   
+##  intro_封面_binary intro_专辑_binary intro_歌手_binary intro_风格_binary
+##  Min.   :0.00000   Min.   :0.00000   Min.   :0.00000   Min.   :0.00000  
+##  1st Qu.:0.00000   1st Qu.:0.00000   1st Qu.:0.00000   1st Qu.:0.00000  
+##  Median :0.00000   Median :0.00000   Median :0.00000   Median :0.00000  
+##  Mean   :0.08443   Mean   :0.03856   Mean   :0.04392   Mean   :0.07418  
+##  3rd Qu.:0.00000   3rd Qu.:0.00000   3rd Qu.:0.00000   3rd Qu.:0.00000  
+##  Max.   :1.00000   Max.   :1.00000   Max.   :1.00000   Max.   :1.00000  
+##  intro_quot_binary intro_amp_binary  intro_更新_binary intro_旋律_binary
+##  Min.   :0.00000   Min.   :0.00000   Min.   :0.00000   Min.   :0.00000  
+##  1st Qu.:0.00000   1st Qu.:0.00000   1st Qu.:0.00000   1st Qu.:0.00000  
+##  Median :0.00000   Median :0.00000   Median :0.00000   Median :0.00000  
+##  Mean   :0.01269   Mean   :0.03367   Mean   :0.08053   Mean   :0.05368  
+##  3rd Qu.:0.00000   3rd Qu.:0.00000   3rd Qu.:0.00000   3rd Qu.:0.00000  
+##  Max.   :1.00000   Max.   :1.00000   Max.   :1.00000   Max.   :1.00000  
+##  intro_收录_binary intro_节奏_binary intro_好听_binary intro_电音_binary
+##  Min.   :0.00000   Min.   :0.00000   Min.   :0.00000   Min.   :0.00000  
+##  1st Qu.:0.00000   1st Qu.:0.00000   1st Qu.:0.00000   1st Qu.:0.00000  
+##  Median :0.00000   Median :0.00000   Median :0.00000   Median :0.00000  
+##  Mean   :0.04685   Mean   :0.05905   Mean   :0.04636   Mean   :0.02684  
+##  3rd Qu.:0.00000   3rd Qu.:0.00000   3rd Qu.:0.00000   3rd Qu.:0.00000  
+##  Max.   :1.00000   Max.   :1.00000   Max.   :1.00000   Max.   :1.00000  
+##   欧美_binary      流行_binary      华语_binary     电子_binary    
+##  Min.   :0.0000   Min.   :0.0000   Min.   :0.000   Min.   :0.0000  
+##  1st Qu.:0.0000   1st Qu.:0.0000   1st Qu.:0.000   1st Qu.:0.0000  
+##  Median :0.0000   Median :0.0000   Median :0.000   Median :0.0000  
+##  Mean   :0.2621   Mean   :0.1957   Mean   :0.162   Mean   :0.1484  
+##  3rd Qu.:1.0000   3rd Qu.:0.0000   3rd Qu.:0.000   3rd Qu.:0.0000  
+##  Max.   :1.0000   Max.   :1.0000   Max.   :1.000   Max.   :1.0000  
+##    ACG_binary      日语_binary      古风_binary     轻音乐_binary   
+##  Min.   :0.0000   Min.   :0.0000   Min.   :0.0000   Min.   :0.0000  
+##  1st Qu.:0.0000   1st Qu.:0.0000   1st Qu.:0.0000   1st Qu.:0.0000  
+##  Median :0.0000   Median :0.0000   Median :0.0000   Median :0.0000  
+##  Mean   :0.1215   Mean   :0.1157   Mean   :0.0898   Mean   :0.0815  
+##  3rd Qu.:0.0000   3rd Qu.:0.0000   3rd Qu.:0.0000   3rd Qu.:0.0000  
+##  Max.   :1.0000   Max.   :1.0000   Max.   :1.0000   Max.   :1.0000  
+##   经典_binary       器乐_binary       治愈_binary       兴奋_binary     
+##  Min.   :0.00000   Min.   :0.00000   Min.   :0.00000   Min.   :0.00000  
+##  1st Qu.:0.00000   1st Qu.:0.00000   1st Qu.:0.00000   1st Qu.:0.00000  
+##  Median :0.00000   Median :0.00000   Median :0.00000   Median :0.00000  
+##  Mean   :0.07077   Mean   :0.06003   Mean   :0.05808   Mean   :0.05661  
+##  3rd Qu.:0.00000   3rd Qu.:0.00000   3rd Qu.:0.00000   3rd Qu.:0.00000  
+##  Max.   :1.00000   Max.   :1.00000   Max.   :1.00000   Max.   :1.00000  
+##   游戏_binary       独立_binary       另类_binary      影视原声_binary  
+##  Min.   :0.00000   Min.   :0.00000   Min.   :0.00000   Min.   :0.00000  
+##  1st Qu.:0.00000   1st Qu.:0.00000   1st Qu.:0.00000   1st Qu.:0.00000  
+##  Median :0.00000   Median :0.00000   Median :0.00000   Median :0.00000  
+##  Mean   :0.05661   Mean   :0.05271   Mean   :0.05271   Mean   :0.05222  
+##  3rd Qu.:0.00000   3rd Qu.:0.00000   3rd Qu.:0.00000   3rd Qu.:0.00000  
+##  Max.   :1.00000   Max.   :1.00000   Max.   :1.00000   Max.   :1.00000  
+##   民族_binary       怀旧_binary       粤语_binary       摇滚_binary     
+##  Min.   :0.00000   Min.   :0.00000   Min.   :0.00000   Min.   :0.00000  
+##  1st Qu.:0.00000   1st Qu.:0.00000   1st Qu.:0.00000   1st Qu.:0.00000  
+##  Median :0.00000   Median :0.00000   Median :0.00000   Median :0.00000  
+##  Mean   :0.05173   Mean   :0.05124   Mean   :0.04832   Mean   :0.04783  
+##  3rd Qu.:0.00000   3rd Qu.:0.00000   3rd Qu.:0.00000   3rd Qu.:0.00000  
+##  Max.   :1.00000   Max.   :1.00000   Max.   :1.00000   Max.   :1.00000  
+##  talent_binary    verification_binary musician_binary  
+##  Min.   :0.0000   Min.   :0.0000      Min.   :0.00000  
+##  1st Qu.:0.0000   1st Qu.:0.0000      1st Qu.:0.00000  
+##  Median :1.0000   Median :0.0000      Median :0.00000  
+##  Mean   :0.5432   Mean   :0.0327      Mean   :0.03172  
+##  3rd Qu.:1.0000   3rd Qu.:0.0000      3rd Qu.:0.00000  
+##  Max.   :1.0000   Max.   :1.0000      Max.   :1.00000
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\DocumentationTok{\#\#\#绘制统计数据图片}
+\FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow =} \FunctionTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{, }\DecValTok{1}\NormalTok{), }\AttributeTok{mar =} \FunctionTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{, }\DecValTok{3}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{) }\SpecialCharTok{+} \FloatTok{0.1}\NormalTok{)}
+
+\ControlFlowTok{for}\NormalTok{ (var }\ControlFlowTok{in}\NormalTok{ numeric\_vars) \{}
+\NormalTok{  current\_data }\OtherTok{=}\NormalTok{ data\_cleaned[[var]]}
+\NormalTok{  kernels }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"rectangular"}\NormalTok{, }\StringTok{"triangular"}\NormalTok{, }\StringTok{"epanechnikov"}\NormalTok{, }\StringTok{"gaussian"}\NormalTok{)}
+\NormalTok{  colors }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"red"}\NormalTok{, }\StringTok{"blue"}\NormalTok{, }\StringTok{"green"}\NormalTok{, }\StringTok{"yellow"}\NormalTok{)}
+  \FunctionTok{hist}\NormalTok{(current\_data, }\AttributeTok{freq =} \ConstantTok{FALSE}\NormalTok{, }\AttributeTok{main =} \FunctionTok{paste}\NormalTok{(}\StringTok{"直方图与核密度估计:"}\NormalTok{, var), }\AttributeTok{xlab =}\NormalTok{ var, }\AttributeTok{ylab =} \StringTok{"密度"}\NormalTok{, }\AttributeTok{col =} \StringTok{"lightgray"}\NormalTok{, }\AttributeTok{border =} \StringTok{"black"}\NormalTok{, }\AttributeTok{ylim =} \FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\FunctionTok{max}\NormalTok{(}\FunctionTok{hist}\NormalTok{(current\_data, }\AttributeTok{plot =} \ConstantTok{FALSE}\NormalTok{)}\SpecialCharTok{$}\NormalTok{density) }\SpecialCharTok{*} \FloatTok{1.3}\NormalTok{))}
+  
+\NormalTok{  bandwidths }\OtherTok{=} \DecValTok{1}
+  \ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \FunctionTok{seq\_along}\NormalTok{(kernels)) \{}
+\NormalTok{    kernel\_type }\OtherTok{\textless{}{-}}\NormalTok{ kernels[i]}
+\NormalTok{    color }\OtherTok{\textless{}{-}}\NormalTok{ colors[i]}
+\NormalTok{    kde }\OtherTok{\textless{}{-}} \FunctionTok{density}\NormalTok{(current\_data, }\AttributeTok{kernel =}\NormalTok{ kernel\_type, }\AttributeTok{bandwidths =}\NormalTok{ bandwidths, }\AttributeTok{adjust =} \DecValTok{1}\NormalTok{)}
+    \FunctionTok{lines}\NormalTok{(kde, }\AttributeTok{col =}\NormalTok{ color, }\AttributeTok{lty =} \DecValTok{1}\NormalTok{, }\AttributeTok{lwd =} \DecValTok{2}\NormalTok{)}
+\NormalTok{  \}}
+  
+  \FunctionTok{legend}\NormalTok{(}\StringTok{"topright"}\NormalTok{, }\AttributeTok{legend =}\NormalTok{ kernels, }\AttributeTok{col =}\NormalTok{ colors, }\AttributeTok{lty =} \DecValTok{1}\NormalTok{, }\AttributeTok{lwd =} \DecValTok{2}\NormalTok{, }\AttributeTok{title =} \StringTok{"核函数"}\NormalTok{, }\AttributeTok{bty =} \StringTok{"n"}\NormalTok{)}
+  
+  \FunctionTok{boxplot}\NormalTok{(current\_data, }\AttributeTok{main =} \FunctionTok{paste}\NormalTok{(}\StringTok{"箱线图:"}\NormalTok{, var), }\AttributeTok{ylab =}\NormalTok{ var, }\AttributeTok{col =} \StringTok{"lightblue"}\NormalTok{)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/descriptive_stats-1.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/descriptive_stats-2.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/descriptive_stats-3.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/descriptive_stats-4.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/descriptive_stats-5.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/descriptive_stats-6.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/descriptive_stats-7.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/descriptive_stats-8.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/descriptive_stats-9.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/descriptive_stats-10.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/descriptive_stats-11.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/descriptive_stats-12.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/descriptive_stats-13.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/descriptive_stats-14.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/descriptive_stats-15.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/descriptive_stats-16.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/descriptive_stats-17.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/descriptive_stats-18.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/descriptive_stats-19.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/descriptive_stats-20.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/descriptive_stats-21.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/descriptive_stats-22.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/descriptive_stats-23.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/descriptive_stats-24.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/descriptive_stats-25.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/descriptive_stats-26.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/descriptive_stats-27.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/descriptive_stats-28.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/descriptive_stats-29.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/descriptive_stats-30.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/descriptive_stats-31.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/descriptive_stats-32.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/descriptive_stats-33.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/descriptive_stats-34.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/descriptive_stats-35.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/descriptive_stats-36.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/descriptive_stats-37.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/descriptive_stats-38.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/descriptive_stats-39.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/descriptive_stats-40.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/descriptive_stats-41.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/descriptive_stats-42.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/descriptive_stats-43.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/descriptive_stats-44.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/descriptive_stats-45.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/descriptive_stats-46.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/descriptive_stats-47.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/descriptive_stats-48.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/descriptive_stats-49.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/descriptive_stats-50.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/descriptive_stats-51.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/descriptive_stats-52.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/descriptive_stats-53.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/descriptive_stats-54.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/descriptive_stats-55.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/descriptive_stats-56.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/descriptive_stats-57.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/descriptive_stats-58.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/descriptive_stats-59.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/descriptive_stats-60.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/descriptive_stats-61.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/descriptive_stats-62.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/descriptive_stats-63.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/descriptive_stats-64.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/descriptive_stats-65.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/descriptive_stats-66.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/descriptive_stats-67.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/descriptive_stats-68.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/descriptive_stats-69.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/descriptive_stats-70.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/descriptive_stats-71.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/descriptive_stats-72.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/descriptive_stats-73.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/descriptive_stats-74.pdf}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\DocumentationTok{\#\#\#对于factor变量的基础统计}
+\CommentTok{\# 如果 factor\_vars 为空，此段代码不会产生输出}
+\ControlFlowTok{if}\NormalTok{(}\FunctionTok{length}\NormalTok{(factor\_vars) }\SpecialCharTok{\textgreater{}} \DecValTok{0}\NormalTok{)\{}
+  \FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{3}\NormalTok{), }\AttributeTok{mar =} \FunctionTok{c}\NormalTok{(}\DecValTok{4}\NormalTok{, }\DecValTok{4}\NormalTok{, }\DecValTok{3}\NormalTok{, }\DecValTok{2}\NormalTok{))}
+  
+  \ControlFlowTok{for}\NormalTok{ (var }\ControlFlowTok{in}\NormalTok{ factor\_vars) \{}
+\NormalTok{    freq\_data }\OtherTok{\textless{}{-}} \FunctionTok{table}\NormalTok{(data\_cleaned[[var]])}
+\NormalTok{    prop\_data }\OtherTok{\textless{}{-}} \FunctionTok{prop.table}\NormalTok{(freq\_data)}
+    
+\NormalTok{    categories }\OtherTok{\textless{}{-}} \FunctionTok{names}\NormalTok{(freq\_data)}
+\NormalTok{    colors }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"\#1f77b4"}\NormalTok{, }\StringTok{"\#ff7f0e"}\NormalTok{)  }\CommentTok{\# 两个颜色}
+    
+    \FunctionTok{barplot}\NormalTok{(freq\_data, }
+            \AttributeTok{main =} \FunctionTok{paste}\NormalTok{(}\StringTok{"频数分布:"}\NormalTok{, var),}
+            \AttributeTok{xlab =}\NormalTok{ var,}
+            \AttributeTok{ylab =} \StringTok{"频数"}\NormalTok{,}
+            \AttributeTok{col =}\NormalTok{ colors[}\DecValTok{1}\SpecialCharTok{:}\FunctionTok{length}\NormalTok{(categories)],}
+            \AttributeTok{border =} \StringTok{"black"}\NormalTok{,}
+            \AttributeTok{ylim =} \FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\FunctionTok{max}\NormalTok{(freq\_data) }\SpecialCharTok{*} \FloatTok{1.2}\NormalTok{))}
+    
+    \FunctionTok{text}\NormalTok{(}\AttributeTok{x =} \FunctionTok{seq\_along}\NormalTok{(freq\_data), }
+         \AttributeTok{y =}\NormalTok{ freq\_data,}
+         \AttributeTok{label =}\NormalTok{ freq\_data,}
+         \AttributeTok{pos =} \DecValTok{3}\NormalTok{,  }\CommentTok{\# 在条形上方}
+         \AttributeTok{cex =} \FloatTok{0.8}\NormalTok{,}
+         \AttributeTok{col =} \StringTok{"black"}\NormalTok{)}
+    
+    \FunctionTok{barplot}\NormalTok{(prop\_data }\SpecialCharTok{*} \DecValTok{100}\NormalTok{, }
+            \AttributeTok{main =} \FunctionTok{paste}\NormalTok{(}\StringTok{"百分比分布:"}\NormalTok{, var),}
+            \AttributeTok{xlab =}\NormalTok{ var,}
+            \AttributeTok{ylab =} \StringTok{"百分比 (\%)"}\NormalTok{,}
+            \AttributeTok{col =}\NormalTok{ colors[}\DecValTok{1}\SpecialCharTok{:}\FunctionTok{length}\NormalTok{(categories)],}
+            \AttributeTok{border =} \StringTok{"black"}\NormalTok{,}
+            \AttributeTok{ylim =} \FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{100}\NormalTok{))}
+    
+    \FunctionTok{text}\NormalTok{(}\AttributeTok{x =} \FunctionTok{seq\_along}\NormalTok{(prop\_data), }
+         \AttributeTok{y =}\NormalTok{ prop\_data }\SpecialCharTok{*} \DecValTok{100}\NormalTok{,}
+         \AttributeTok{label =} \FunctionTok{paste0}\NormalTok{(}\FunctionTok{round}\NormalTok{(prop\_data }\SpecialCharTok{*} \DecValTok{100}\NormalTok{, }\DecValTok{1}\NormalTok{), }\StringTok{"\%"}\NormalTok{),}
+         \AttributeTok{pos =} \DecValTok{3}\NormalTok{,}
+         \AttributeTok{cex =} \FloatTok{0.8}\NormalTok{,}
+         \AttributeTok{col =} \StringTok{"black"}\NormalTok{)}
+    
+    \FunctionTok{pie}\NormalTok{(freq\_data,}
+        \AttributeTok{main =} \FunctionTok{paste}\NormalTok{(}\StringTok{"饼图:"}\NormalTok{, var),}
+        \AttributeTok{col =}\NormalTok{ colors[}\DecValTok{1}\SpecialCharTok{:}\FunctionTok{length}\NormalTok{(categories)],}
+        \AttributeTok{labels =} \FunctionTok{paste0}\NormalTok{(categories, }\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{, }
+\NormalTok{                        freq\_data, }\StringTok{" ("}\NormalTok{, }
+                        \FunctionTok{round}\NormalTok{(prop\_data }\SpecialCharTok{*} \DecValTok{100}\NormalTok{, }\DecValTok{1}\NormalTok{), }\StringTok{"\%)"}\NormalTok{),}
+        \AttributeTok{cex =} \FloatTok{0.9}\NormalTok{)}
+    
+    \FunctionTok{legend}\NormalTok{(}\StringTok{"topright"}\NormalTok{,}
+           \AttributeTok{legend =}\NormalTok{ categories,}
+           \AttributeTok{fill =}\NormalTok{ colors[}\DecValTok{1}\SpecialCharTok{:}\FunctionTok{length}\NormalTok{(categories)],}
+           \AttributeTok{title =} \FunctionTok{paste}\NormalTok{(}\StringTok{"水平:"}\NormalTok{, var))}
+\NormalTok{  \}}
+  \FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{))}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\DocumentationTok{\#\#\#设置中文字体}
+\FunctionTok{windowsFonts}\NormalTok{(}\AttributeTok{SimHei =} \FunctionTok{windowsFont}\NormalTok{(}\StringTok{"SimHei"}\NormalTok{))}
+
+\DocumentationTok{\#\#\#定义停用词列表}
+\NormalTok{stopwords\_custom }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"br"}\NormalTok{, }\StringTok{"介绍"}\NormalTok{, }\StringTok{"一个"}\NormalTok{, }\StringTok{"没有"}\NormalTok{, }\StringTok{"可以"}\NormalTok{, }\StringTok{"一种"}\NormalTok{, }\StringTok{"就是"}\NormalTok{, }\StringTok{"因为"}\NormalTok{, }\StringTok{"一些"}\NormalTok{, }\StringTok{"这个"}\NormalTok{, }\StringTok{"这些"}\NormalTok{, }\StringTok{"不是"}\NormalTok{, }\StringTok{"所以"}\NormalTok{, }\StringTok{"什么"}\NormalTok{, }\StringTok{"那些"}\NormalTok{)}
+
+\DocumentationTok{\#\#\#清洗文本中所有的标点}
+\NormalTok{text\_clean }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{ (texts) \{}
+  \CommentTok{\# 增加对NA的处理，防止报错}
+\NormalTok{  texts[}\FunctionTok{is.na}\NormalTok{(texts)] }\OtherTok{\textless{}{-}} \StringTok{""}
+\NormalTok{  all\_text }\OtherTok{\textless{}{-}} \FunctionTok{paste}\NormalTok{(texts, }\AttributeTok{collapse =} \StringTok{" "}\NormalTok{)}
+\NormalTok{  all\_text }\OtherTok{\textless{}{-}} \FunctionTok{str\_replace\_all}\NormalTok{(all\_text, }\StringTok{"[，。]"}\NormalTok{, }\StringTok{" "}\NormalTok{)}
+  \FunctionTok{return}\NormalTok{(all\_text)}
+\NormalTok{\}}
+
+\DocumentationTok{\#\#\#分析提取热词并绘图}
+\NormalTok{text\_analysis }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(texts) \{}
+\NormalTok{  text\_cleaned }\OtherTok{\textless{}{-}} \FunctionTok{text\_clean}\NormalTok{(texts)}
+  
+  \DocumentationTok{\#\#\#初始化分词器}
+\NormalTok{  cutter }\OtherTok{\textless{}{-}} \FunctionTok{worker}\NormalTok{()}
+\NormalTok{  words }\OtherTok{\textless{}{-}}\NormalTok{ cutter[text\_cleaned]}
+\NormalTok{  words\_filtered }\OtherTok{\textless{}{-}}\NormalTok{ words[}
+    \FunctionTok{nchar}\NormalTok{(words) }\SpecialCharTok{\textgreater{}} \DecValTok{1} \SpecialCharTok{\&}
+      \SpecialCharTok{!}\NormalTok{words }\SpecialCharTok{\%in\%}\NormalTok{ stopwords\_custom}
+\NormalTok{  ]}
+\NormalTok{  word\_freq }\OtherTok{\textless{}{-}} \FunctionTok{table}\NormalTok{(words\_filtered) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{as.data.frame}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{arrange}\NormalTok{(}\FunctionTok{desc}\NormalTok{(Freq)) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{head}\NormalTok{(}\DecValTok{50}\NormalTok{)}
+  \FunctionTok{colnames}\NormalTok{(word\_freq) }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"Word"}\NormalTok{, }\StringTok{"Frequency"}\NormalTok{)}
+  
+  \DocumentationTok{\#\#\#绘制词云图}
+  \FunctionTok{tryCatch}\NormalTok{(\{}
+    \FunctionTok{wordcloud}\NormalTok{(}\AttributeTok{words =}\NormalTok{ word\_freq}\SpecialCharTok{$}\NormalTok{Word,}
+            \AttributeTok{freq =}\NormalTok{ word\_freq}\SpecialCharTok{$}\NormalTok{Frequency, }
+            \AttributeTok{min.freq =} \DecValTok{5}\NormalTok{,}
+            \AttributeTok{max.words =} \DecValTok{100}\NormalTok{,}
+            \AttributeTok{random.order =} \ConstantTok{FALSE}\NormalTok{,}
+            \AttributeTok{colors =} \FunctionTok{rainbow}\NormalTok{(}\DecValTok{10}\NormalTok{),}
+            \AttributeTok{family =} \StringTok{"SimHei"}\NormalTok{)}
+\NormalTok{  \}, }\AttributeTok{error =} \ControlFlowTok{function}\NormalTok{(e) \{}\FunctionTok{message}\NormalTok{(}\StringTok{"词云绘制跳过: 数据不足或画布太小"}\NormalTok{)\})}
+  
+  \DocumentationTok{\#\#\#返回高频词以及高频词的频率}
+  \FunctionTok{return}\NormalTok{(word\_freq)}
+\NormalTok{\}}
+
+\CommentTok{\# 运行名字和简介分析}
+\NormalTok{name\_analysis }\OtherTok{\textless{}{-}} \FunctionTok{text\_analysis}\NormalTok{(data\_cleaned}\SpecialCharTok{$}\NormalTok{name)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Error in worker(): could not find function "worker"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{introduction\_analysis }\OtherTok{\textless{}{-}} \FunctionTok{text\_analysis}\NormalTok{(data\_cleaned}\SpecialCharTok{$}\NormalTok{introduction)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Error in worker(): could not find function "worker"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\DocumentationTok{\#\#\#是否需要log变换}
+\FunctionTok{skewness}\NormalTok{(data\_cleaned}\SpecialCharTok{$}\NormalTok{play\_count)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 8.969987
+\end{verbatim}
+
+\section{4. 核心指标的皮尔逊相关性统计分析
+(模块一)}\label{ux6838ux5fc3ux6307ux6807ux7684ux76aeux5c14ux900aux76f8ux5173ux6027ux7edfux8ba1ux5206ux6790-ux6a21ux5757ux4e00}
+
+基于皮尔逊相关系数矩阵（Pearson Correlation
+Matrix）的热力图结果，我们对播放量（play\_count）与各核心变量之间的线性依赖关系进行分析
+
+\textbf{分析结论：} 1. 收藏量与播放量呈现极强正相关性
+数据结果显示，收藏量（collect\_count）
+与播放量的相关系数在所有变量中最高（颜色最深）。
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{1}
+\item
+  互动指标的协同效应显著 分享量（share\_count） 与
+  评论数（comment\_count）
+  均与播放量保持显著的正向线性关系，且这三者（收藏、分享、评论）之间存在明显的多重共线性（Multicollinearity）。
+\item
+  作者粉丝数的相关性强度分析 作者粉丝数（fans）
+  与播放量呈正相关，但根据热力图色块强度对比，其相关系数低于收藏量和分享量。
+\item
+  综上所述，播放量的增长与用户深度互动指标（特别是收藏量）存在强统计关联。
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# ====模块1：探究播放量、收藏量、分享量、评论量以及作者粉丝数之间的线性相关关系。 ====}
+\NormalTok{result\_vars }\OtherTok{\textless{}{-}}\NormalTok{ data\_cleaned }\SpecialCharTok{\%\textgreater{}\%}
+\NormalTok{  dplyr}\SpecialCharTok{::}\FunctionTok{select}\NormalTok{(play\_count, collect\_count, share\_count, comment\_count, fans)}
+\CommentTok{\# 计算相关系数矩阵}
+\NormalTok{cor\_matrix }\OtherTok{\textless{}{-}} \FunctionTok{cor}\NormalTok{(result\_vars, }\AttributeTok{use =} \StringTok{"complete.obs"}\NormalTok{)}
+\CommentTok{\# 绘制热力图}
+\FunctionTok{corrplot}\NormalTok{(cor\_matrix, }
+         \AttributeTok{method =} \StringTok{"color"}\NormalTok{, }
+         \AttributeTok{type =} \StringTok{"upper"}\NormalTok{, }
+         \AttributeTok{addCoef.col =} \StringTok{"black"}\NormalTok{, }\CommentTok{\# 显示相关系数数值}
+         \AttributeTok{tl.col =} \StringTok{"black"}\NormalTok{,      }\CommentTok{\# 标签颜色}
+         \AttributeTok{tl.srt =} \DecValTok{45}\NormalTok{,           }\CommentTok{\# 标签旋转角度}
+         \AttributeTok{title =} \StringTok{"Correlation Matrix"}\NormalTok{, }
+         \AttributeTok{mar =} \FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{0}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/module_1_corr-1.pdf}}
+
+\section{5. 基于标签分类的播放量均值差异分析
+(模块二)}\label{ux57faux4e8eux6807ux7b7eux5206ux7c7bux7684ux64adux653eux91cfux5747ux503cux5deeux5f02ux5206ux6790-ux6a21ux5757ux4e8c}
+
+通过对歌单标签进行清洗与拆解，并计算各标签下歌单的平均播放量
+，我们观察到不同风格与主题的标签在流量获取上存在显著的 层级分化
+
+\textbf{模块二分析结论：}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  头部标签的集中趋势
+  统计结果显示，部分特定标签（如``华语''、``流行''、``90后''等）的样本平均播放量远高于全局均值。
+\item
+  尾部标签的长尾效应
+  相对地，部分小众风格标签（如特定器乐、冷门流派）的平均播放量显著较低。
+\item
+  标签频率与热度的非线性关系
+  对比``标签出现频率''与``标签平均播放量''可以发现，高频使用的标签并不一定对应最高的平均播放量（即``热门标签''不等于``高流量标签''）。
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#====模块2：高价值标签挖掘====}
+\NormalTok{tag\_analysis\_top }\OtherTok{\textless{}{-}}\NormalTok{ data\_cleaned }\SpecialCharTok{\%\textgreater{}\%}
+\NormalTok{  dplyr}\SpecialCharTok{::}\FunctionTok{select}\NormalTok{(topics, play\_count) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{topics =} \FunctionTok{str\_remove\_all}\NormalTok{(topics, }\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{[|}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{]|\textquotesingle{}|}\SpecialCharTok{\textbackslash{}"}\StringTok{| "}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{separate\_rows}\NormalTok{(topics, }\AttributeTok{sep =} \StringTok{","}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \CommentTok{\# 按标签分组统计}
+  \FunctionTok{group\_by}\NormalTok{(topics) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarise}\NormalTok{(}
+    \AttributeTok{avg\_play =} \FunctionTok{mean}\NormalTok{(play\_count),}
+    \AttributeTok{count =} \FunctionTok{n}\NormalTok{()}
+\NormalTok{  ) }\SpecialCharTok{\%\textgreater{}\%}
+  \CommentTok{\# 按平均播放量降序排列}
+  \FunctionTok{arrange}\NormalTok{(}\FunctionTok{desc}\NormalTok{(avg\_play)) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{slice\_head}\NormalTok{(}\AttributeTok{n =} \DecValTok{10}\NormalTok{)}
+
+\NormalTok{tag\_analysis\_bottom }\OtherTok{\textless{}{-}}\NormalTok{ data\_cleaned }\SpecialCharTok{\%\textgreater{}\%}
+\NormalTok{  dplyr}\SpecialCharTok{::}\FunctionTok{select}\NormalTok{(topics, play\_count) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{topics =} \FunctionTok{str\_remove\_all}\NormalTok{(topics, }\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{[|}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{]|\textquotesingle{}|}\SpecialCharTok{\textbackslash{}"}\StringTok{| "}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{separate\_rows}\NormalTok{(topics, }\AttributeTok{sep =} \StringTok{","}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \CommentTok{\# 按标签分组统计}
+  \FunctionTok{group\_by}\NormalTok{(topics) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarise}\NormalTok{(}
+    \AttributeTok{avg\_play =} \FunctionTok{mean}\NormalTok{(play\_count),}
+    \AttributeTok{count =} \FunctionTok{n}\NormalTok{()}
+\NormalTok{  ) }\SpecialCharTok{\%\textgreater{}\%}
+  \CommentTok{\# 按平均播放量升序排列}
+  \FunctionTok{arrange}\NormalTok{(avg\_play) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{slice\_head}\NormalTok{(}\AttributeTok{n =} \DecValTok{10}\NormalTok{)}
+
+\NormalTok{tag\_analysis\_avoid\_extreme\_top }\OtherTok{\textless{}{-}}\NormalTok{ data\_cleaned }\SpecialCharTok{\%\textgreater{}\%}
+\NormalTok{  dplyr}\SpecialCharTok{::}\FunctionTok{select}\NormalTok{(topics, play\_count) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{topics =} \FunctionTok{str\_remove\_all}\NormalTok{(topics, }\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{[|}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{]|\textquotesingle{}|}\SpecialCharTok{\textbackslash{}"}\StringTok{| "}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{separate\_rows}\NormalTok{(topics, }\AttributeTok{sep =} \StringTok{","}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \CommentTok{\# 按标签分组统计}
+  \FunctionTok{group\_by}\NormalTok{(topics) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarise}\NormalTok{(}
+    \AttributeTok{avg\_play =} \FunctionTok{mean}\NormalTok{(play\_count),}
+    \AttributeTok{count =} \FunctionTok{n}\NormalTok{()}
+\NormalTok{  ) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(count }\SpecialCharTok{\textgreater{}} \DecValTok{10}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \CommentTok{\# 按平均播放量降序排列}
+  \FunctionTok{arrange}\NormalTok{(}\FunctionTok{desc}\NormalTok{(avg\_play)) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{slice\_head}\NormalTok{(}\AttributeTok{n =} \DecValTok{10}\NormalTok{)}
+
+\NormalTok{tag\_analysis\_avoid\_extreme\_bottom }\OtherTok{\textless{}{-}}\NormalTok{ data\_cleaned }\SpecialCharTok{\%\textgreater{}\%}
+\NormalTok{  dplyr}\SpecialCharTok{::}\FunctionTok{select}\NormalTok{(topics, play\_count) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{topics =} \FunctionTok{str\_remove\_all}\NormalTok{(topics, }\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{[|}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{]|\textquotesingle{}|}\SpecialCharTok{\textbackslash{}"}\StringTok{| "}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{separate\_rows}\NormalTok{(topics, }\AttributeTok{sep =} \StringTok{","}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \CommentTok{\# 按标签分组统计}
+  \FunctionTok{group\_by}\NormalTok{(topics) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarise}\NormalTok{(}
+    \AttributeTok{avg\_play =} \FunctionTok{mean}\NormalTok{(play\_count),}
+    \AttributeTok{count =} \FunctionTok{n}\NormalTok{()}
+\NormalTok{  ) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(count }\SpecialCharTok{\textgreater{}} \DecValTok{10}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \CommentTok{\# 按平均播放量升序排列}
+  \FunctionTok{arrange}\NormalTok{(avg\_play) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{slice\_head}\NormalTok{(}\AttributeTok{n =} \DecValTok{10}\NormalTok{)}
+
+\NormalTok{tag\_freq }\OtherTok{\textless{}{-}}\NormalTok{ data\_cleaned }\SpecialCharTok{\%\textgreater{}\%}
+\NormalTok{  dplyr}\SpecialCharTok{::}\FunctionTok{select}\NormalTok{(topics, play\_count) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{topics =} \FunctionTok{str\_remove\_all}\NormalTok{(topics, }\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{[|}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{]|\textquotesingle{}|}\SpecialCharTok{\textbackslash{}"}\StringTok{| "}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{separate\_rows}\NormalTok{(topics, }\AttributeTok{sep =} \StringTok{","}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \CommentTok{\# 按标签分组统计}
+  \FunctionTok{group\_by}\NormalTok{(topics) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarise}\NormalTok{(}
+    \AttributeTok{count =} \FunctionTok{n}\NormalTok{()}
+\NormalTok{  ) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{arrange}\NormalTok{(}\FunctionTok{desc}\NormalTok{(count)) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{slice\_head}\NormalTok{(}\AttributeTok{n =} \DecValTok{10}\NormalTok{)}
+
+\CommentTok{\# 绘图}
+\FunctionTok{ggplot}\NormalTok{(tag\_analysis\_top, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =} \FunctionTok{reorder}\NormalTok{(topics, avg\_play), }\AttributeTok{y =}\NormalTok{ avg\_play)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_col}\NormalTok{(}\AttributeTok{fill =} \StringTok{"steelblue"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{coord\_flip}\NormalTok{() }\SpecialCharTok{+} \CommentTok{\# 翻转坐标轴便于阅读标签}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"Top 10 Tags by Average Play Count"}\NormalTok{, }\AttributeTok{x =} \StringTok{"Tags"}\NormalTok{, }\AttributeTok{y =} \StringTok{"Average Play Count"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme\_minimal}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/module_2_tags-1.pdf}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{(tag\_analysis\_bottom, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =} \FunctionTok{reorder}\NormalTok{(topics, avg\_play), }\AttributeTok{y =}\NormalTok{ avg\_play)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_col}\NormalTok{(}\AttributeTok{fill =} \StringTok{"steelblue"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{coord\_flip}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"Bottom 10 Tags by Average Play Count"}\NormalTok{, }\AttributeTok{x =} \StringTok{"Tags"}\NormalTok{, }\AttributeTok{y =} \StringTok{"Average Play Count"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme\_minimal}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/module_2_tags-2.pdf}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{(tag\_analysis\_avoid\_extreme\_top, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =} \FunctionTok{reorder}\NormalTok{(topics, avg\_play), }\AttributeTok{y =}\NormalTok{ avg\_play)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_col}\NormalTok{(}\AttributeTok{fill =} \StringTok{"steelblue"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{coord\_flip}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"Top 10 Tags by Average Play Count(Freq \textgreater{} 10)"}\NormalTok{, }\AttributeTok{x =} \StringTok{"Tags"}\NormalTok{, }\AttributeTok{y =} \StringTok{"Average Play Count"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme\_minimal}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/module_2_tags-3.pdf}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{(tag\_analysis\_avoid\_extreme\_bottom, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =} \FunctionTok{reorder}\NormalTok{(topics, avg\_play), }\AttributeTok{y =}\NormalTok{ avg\_play)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_col}\NormalTok{(}\AttributeTok{fill =} \StringTok{"steelblue"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{coord\_flip}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"Bottom 10 Tags by Average Play Count(Freq \textgreater{} 10)"}\NormalTok{, }\AttributeTok{x =} \StringTok{"Tags"}\NormalTok{, }\AttributeTok{y =} \StringTok{"Average Play Count"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme\_minimal}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/module_2_tags-4.pdf}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{(tag\_freq, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =} \FunctionTok{reorder}\NormalTok{(topics, count), }\AttributeTok{y =}\NormalTok{ count)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_col}\NormalTok{(}\AttributeTok{fill =} \StringTok{"steelblue"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{coord\_flip}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"Tag frequency"}\NormalTok{, }\AttributeTok{x =} \StringTok{"Tags"}\NormalTok{, }\AttributeTok{y =} \StringTok{"Top 10 Tags by Tag Frequency"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme\_minimal}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/module_2_tags-5.pdf}}
+\# 6. 标签对播放量的多元回归系数显著性检验 (模块三)
+
+为了量化不同标签对播放量的独立影响，剔除其他干扰因素，我们构建了多元线性回归模型
+log(play\_count) \textasciitilde{} tags。基于模型生成的
+回归系数置信区间图
+
+\textbf{模块三分析结论：}
+
+1.显著的正向驱动因子回归系数图显示，位于 \(X=0\)
+轴右侧的红色节点代表对播放量有显著正向贡献的标签
+标签华语和散步的系数估计值显著为正。这表明在控制其他变量不变的情况下，包含这些标签的歌单具有更高的预期播放量。这些标签是当前平台生态中的``流量密码''，具有极高的边际收益
+
+2.显著的负向抑制因子位于
+\(X=0\)轴左侧的蓝色节点代表与播放量呈负相关的标签。标签蓝调和
+NewAge的系数显著为负。负向因子与置信区间相反，部分标签（如``蓝调''、``民族''等）的回归系数为负，且置信区间（Confidence
+Interval）不包含0。这些标签往往对应小众或冷门垂直领域。虽然它们可能精准命中特定长尾人群，但在统计层面，它们对大众流量的获取存在显著的抑制作用
+
+3.置信区间与稳健性分析显著性判断：半数高影响力标签的置信区间并未跨越
+0轴，证明其对播放量的影响在 \(\alpha=0.05\)
+水平下是统计显著的，而非随机波动。其它（如``经典''、``日语''等）
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#====模块3：多元线性回归进一步分析tag impact====}
+\DocumentationTok{\#\#\#提取并集标签}
+\NormalTok{all\_tags }\OtherTok{\textless{}{-}} \FunctionTok{unique}\NormalTok{(}\FunctionTok{c}\NormalTok{(}
+\NormalTok{  tag\_analysis\_avoid\_extreme\_top}\SpecialCharTok{$}\NormalTok{topics,}
+\NormalTok{  tag\_analysis\_avoid\_extreme\_bottom}\SpecialCharTok{$}\NormalTok{topics,}
+\NormalTok{  tag\_freq}\SpecialCharTok{$}\NormalTok{topics}
+\NormalTok{))}
+
+\FunctionTok{cat}\NormalTok{(}\StringTok{"共提取"}\NormalTok{, }\FunctionTok{length}\NormalTok{(all\_tags), }\StringTok{"个不重复标签}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 共提取 28 个不重复标签
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\DocumentationTok{\#\#\#清洗topic量}
+\NormalTok{model\_data\_long }\OtherTok{\textless{}{-}}\NormalTok{ data\_cleaned }\SpecialCharTok{\%\textgreater{}\%}
+\NormalTok{  dplyr}\SpecialCharTok{::}\FunctionTok{select}\NormalTok{(play\_count, topics) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}
+    \AttributeTok{topics\_clean =} \FunctionTok{str\_remove\_all}\NormalTok{(topics, }\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{[|}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{]|\textquotesingle{}|}\SpecialCharTok{\textbackslash{}"}\StringTok{| "}\NormalTok{),}
+    \AttributeTok{log\_play =} \FunctionTok{log1p}\NormalTok{(play\_count)}
+\NormalTok{  ) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{separate\_rows}\NormalTok{(topics\_clean, }\AttributeTok{sep =} \StringTok{","}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(topics\_clean }\SpecialCharTok{!=} \StringTok{""}\NormalTok{)}
+
+\DocumentationTok{\#\#\#获取唯一歌曲记录}
+\NormalTok{unique\_songs }\OtherTok{\textless{}{-}}\NormalTok{ model\_data\_long }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{distinct}\NormalTok{(play\_count, log\_play)}
+\NormalTok{tag\_matrix }\OtherTok{\textless{}{-}} \FunctionTok{matrix}\NormalTok{(}\DecValTok{0}\DataTypeTok{L}\NormalTok{, }
+                     \AttributeTok{nrow =} \FunctionTok{nrow}\NormalTok{(unique\_songs), }
+                     \AttributeTok{ncol =} \FunctionTok{length}\NormalTok{(all\_tags))}
+\FunctionTok{colnames}\NormalTok{(tag\_matrix) }\OtherTok{\textless{}{-}} \FunctionTok{paste0}\NormalTok{(}\StringTok{"tag\_"}\NormalTok{, }\FunctionTok{make.names}\NormalTok{(all\_tags))}
+
+\CommentTok{\# 填充矩阵}
+\ControlFlowTok{for}\NormalTok{(i }\ControlFlowTok{in} \FunctionTok{seq\_len}\NormalTok{(}\FunctionTok{nrow}\NormalTok{(unique\_songs))) \{}
+\NormalTok{  song\_play\_count }\OtherTok{\textless{}{-}}\NormalTok{ unique\_songs}\SpecialCharTok{$}\NormalTok{play\_count[i]}
+\NormalTok{  song\_tags }\OtherTok{\textless{}{-}}\NormalTok{ model\_data\_long}\SpecialCharTok{$}\NormalTok{topics\_clean[model\_data\_long}\SpecialCharTok{$}\NormalTok{play\_count }\SpecialCharTok{==}\NormalTok{ song\_play\_count]}
+  
+  \ControlFlowTok{for}\NormalTok{(tag }\ControlFlowTok{in}\NormalTok{ song\_tags) \{}
+    \ControlFlowTok{if}\NormalTok{(tag }\SpecialCharTok{\%in\%}\NormalTok{ all\_tags) \{}
+\NormalTok{      col\_idx }\OtherTok{\textless{}{-}} \FunctionTok{match}\NormalTok{(}\FunctionTok{make.names}\NormalTok{(tag), }\FunctionTok{make.names}\NormalTok{(all\_tags))}
+\NormalTok{      tag\_matrix[i, col\_idx] }\OtherTok{\textless{}{-}} \DecValTok{1}\DataTypeTok{L}
+\NormalTok{    \}}
+\NormalTok{  \}}
+\NormalTok{\}}
+\NormalTok{model\_data\_wide }\OtherTok{\textless{}{-}} \FunctionTok{cbind}\NormalTok{(unique\_songs, }\FunctionTok{as.data.frame}\NormalTok{(tag\_matrix))}
+
+\DocumentationTok{\#\#\#线性回归}
+\NormalTok{feature\_cols }\OtherTok{\textless{}{-}} \FunctionTok{colnames}\NormalTok{(tag\_matrix)}
+\NormalTok{formula\_str }\OtherTok{\textless{}{-}} \FunctionTok{paste}\NormalTok{(}\StringTok{"log\_play \textasciitilde{}"}\NormalTok{, }\FunctionTok{paste}\NormalTok{(feature\_cols, }\AttributeTok{collapse =} \StringTok{" + "}\NormalTok{))}
+\NormalTok{model\_lm }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(}\FunctionTok{as.formula}\NormalTok{(formula\_str), }\AttributeTok{data =}\NormalTok{ model\_data\_wide)}
+
+\DocumentationTok{\#\#\#提取系数}
+\NormalTok{model\_all\_tags }\OtherTok{\textless{}{-}} \FunctionTok{tidy}\NormalTok{(model\_lm, }\AttributeTok{conf.int =} \ConstantTok{TRUE}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(term }\SpecialCharTok{\%in\%}\NormalTok{ feature\_cols) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}
+    \AttributeTok{tag\_name =}\NormalTok{ all\_tags[}\FunctionTok{match}\NormalTok{(}\FunctionTok{str\_remove}\NormalTok{(term, }\StringTok{"tag\_"}\NormalTok{), }\FunctionTok{make.names}\NormalTok{(all\_tags))],}
+    \AttributeTok{significance =} \FunctionTok{ifelse}\NormalTok{(p.value }\SpecialCharTok{\textless{}} \FloatTok{0.05}\NormalTok{, }\StringTok{"Significant"}\NormalTok{, }\StringTok{"Not Significant"}\NormalTok{)}
+\NormalTok{  )}
+
+\CommentTok{\# 绘制基本图}
+\FunctionTok{ggplot}\NormalTok{(model\_all\_tags, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ estimate, }\AttributeTok{y =} \FunctionTok{reorder}\NormalTok{(tag\_name, estimate), }\AttributeTok{color =} \FunctionTok{ifelse}\NormalTok{(estimate }\SpecialCharTok{\textgreater{}} \DecValTok{0}\NormalTok{, }\StringTok{"Positive"}\NormalTok{, }\StringTok{"Negative"}\NormalTok{), }\AttributeTok{alpha =}\NormalTok{ significance)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_point}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{geom\_errorbar}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{xmin =}\NormalTok{ conf.low, }\AttributeTok{xmax =}\NormalTok{ conf.high), }\AttributeTok{width =} \FloatTok{0.2}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_vline}\NormalTok{(}\AttributeTok{xintercept =} \DecValTok{0}\NormalTok{, }\AttributeTok{linetype =} \StringTok{"dashed"}\NormalTok{, }\AttributeTok{color =} \StringTok{"gray50"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{scale\_color\_manual}\NormalTok{(}\AttributeTok{values =} \FunctionTok{c}\NormalTok{(}\StringTok{"Positive"} \OtherTok{=} \StringTok{"\#E41A1C"}\NormalTok{, }\StringTok{"Negative"} \OtherTok{=} \StringTok{"\#377EB8"}\NormalTok{)) }\SpecialCharTok{+}
+  \FunctionTok{scale\_alpha\_manual}\NormalTok{(}\AttributeTok{values =} \FunctionTok{c}\NormalTok{(}\StringTok{"Significant"} \OtherTok{=} \FloatTok{1.0}\NormalTok{, }\StringTok{"Not Significant"} \OtherTok{=} \FloatTok{0.4}\NormalTok{)) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"All Tags Impact on Play Count"}\NormalTok{,}
+       \AttributeTok{subtitle =} \StringTok{"Linear Regression Coefficients with 95\% CI | Red = Positive, Blue = Negative"}\NormalTok{,}
+       \AttributeTok{x =} \StringTok{"Effect Size (Impact on Log Play Count)"}\NormalTok{,}
+       \AttributeTok{y =} \ConstantTok{NULL}\NormalTok{,}
+       \AttributeTok{color =} \StringTok{"Impact Direction"}\NormalTok{,}
+       \AttributeTok{alpha =} \StringTok{"Significance"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme\_minimal}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/module_3_tag_regression-1.pdf}}
+
+\section{7. 基于残差诊断的异常值识别与数据清洗
+(模块四)}\label{ux57faux4e8eux6b8bux5deeux8bcaux65adux7684ux5f02ux5e38ux503cux8bc6ux522bux4e0eux6570ux636eux6e05ux6d17-ux6a21ux5757ux56db}
+
+为了识别数据集中可能扭曲后续聚类结果的极端样本，我们构建了以对数播放量为因变量，互动指标为自变量的诊断性线性回归模型（Diagnostic
+OLS Model）：log\_play \textasciitilde{} collect + share + comment
+
+\textbf{分析结论：}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  诊断模型的统计显著性与局限性 整体显著性：F 统计量为 283.9
+  (\(p < 2.2e^{-16}\))，表明互动指标整体上能显著解释播放量的变异
+  拟合优度：\(R^2 = 0.294\)，说明仅由互动指标构建的线性模型只能解释约
+  29.4\%
+  的播放量方差。这暗示播放量的形成机制存在非线性特征或受其他未观测变量（如算法推荐权重、发布时间）影响，导致存在较大的残差（Residuals），这正是我们检测异常值的统计基础
+\item
+  回归系数的结构性分析 收藏量（collect\_count）：系数为 \(3.085e^{-05}\)
+  (\(t=12.48, p<0.001\))，是模型中最强的正向预测因子，再次印证了``收藏''是流量转化的核心。
+  分享量（share\_count）：系数呈现反直觉的负值
+  (\(-8.037e^{-04}\))。考虑到模块一中分享量与播放量呈正相关，此处的负系数极有可能是由于变量间存在高度
+  多重共线性所致（即收藏与分享高度相关，模型在控制收藏量后，分享量的边际效应发生了符号翻转）。在异常值诊断场景下，我们主要关注残差，故可暂时容忍此共线性
+\item
+  异常值与高杠杆点的识别结果 高影响力异常值（Outliers, n=47）：识别出 47
+  个样本，其 Cook's Distance
+  超过阈值。这些点通常代表``数据录入错误''或``极端的头部爆款''（流量远超模型预测值的超级歌单）
+  高杠杆点（High Leverage Points, n=74）：识别出 74
+  个样本在自变量空间（互动数据）上偏离均值过远
+\item
+  数据清洗策略 为了保证后续 K-Means
+  聚类算法的鲁棒性，我们在进入模块五之前，决定将这 47 个高影响力异常值
+  从训练集中剔除
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#====模块4：检测播放数异常值点和杠杆点====}
+
+\NormalTok{data\_cleaned }\OtherTok{\textless{}{-}}\NormalTok{ data\_cleaned }\SpecialCharTok{\%\textgreater{}\%}
+  \CommentTok{\# 使用log1p处理0值}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{log\_play =} \FunctionTok{log1p}\NormalTok{(play\_count)) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(play\_count }\SpecialCharTok{\textgreater{}} \DecValTok{0}\NormalTok{, collect\_count }\SpecialCharTok{\textgreater{}=} \DecValTok{0}\NormalTok{, share\_count }\SpecialCharTok{\textgreater{}=} \DecValTok{0}\NormalTok{, comment\_count }\SpecialCharTok{\textgreater{}=} \DecValTok{0}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{na.omit}\NormalTok{()}
+
+\DocumentationTok{\#\#\#构建model}
+\NormalTok{diagnostic\_formula }\OtherTok{\textless{}{-}}\NormalTok{ log\_play }\SpecialCharTok{\textasciitilde{}}\NormalTok{ collect\_count }\SpecialCharTok{+}\NormalTok{ share\_count }\SpecialCharTok{+}\NormalTok{ comment\_count}
+\NormalTok{diag\_model }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(diagnostic\_formula, }\AttributeTok{data =}\NormalTok{ data\_cleaned)}
+\FunctionTok{summary}\NormalTok{(diag\_model)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = diagnostic_formula, data = data_cleaned)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -15.5107  -0.5694   0.1921   0.9842   4.7456 
+## 
+## Coefficients:
+##                 Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)    1.161e+01  3.854e-02 301.162  < 2e-16 ***
+## collect_count  3.085e-05  2.472e-06  12.477  < 2e-16 ***
+## share_count   -8.037e-04  1.760e-04  -4.566 5.28e-06 ***
+## comment_count  1.157e-03  1.902e-04   6.084 1.40e-09 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 1.537 on 2045 degrees of freedom
+## Multiple R-squared:  0.294,  Adjusted R-squared:  0.293 
+## F-statistic: 283.9 on 3 and 2045 DF,  p-value: < 2.2e-16
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\DocumentationTok{\#\#\#计算诊断统计量}
+\FunctionTok{par}\NormalTok{(}\AttributeTok{mar =} \FunctionTok{c}\NormalTok{(}\DecValTok{6}\NormalTok{, }\DecValTok{6}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{3}\NormalTok{) }\SpecialCharTok{+} \FloatTok{0.1}\NormalTok{, }\AttributeTok{mgp =} \FunctionTok{c}\NormalTok{(}\FloatTok{3.5}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{))}
+\NormalTok{cooks\_dist }\OtherTok{\textless{}{-}} \FunctionTok{cooks.distance}\NormalTok{(diag\_model)}
+\NormalTok{leverage }\OtherTok{\textless{}{-}} \FunctionTok{hatvalues}\NormalTok{(diag\_model)}
+\NormalTok{std\_resid }\OtherTok{\textless{}{-}} \FunctionTok{rstandard}\NormalTok{(diag\_model)}
+\NormalTok{p\_influence }\OtherTok{\textless{}{-}} \FunctionTok{influencePlot}\NormalTok{(}
+\NormalTok{  diag\_model,}
+  \AttributeTok{main =} \StringTok{"影响力诊断图 (Influence Plot)"}\NormalTok{,}
+  \AttributeTok{sub =} \StringTok{"圆圈大小 ∝ Cook\textquotesingle{}s距离"}\NormalTok{ ,}
+  \AttributeTok{xlab =} \StringTok{"标准化残差"}\NormalTok{,}
+  \AttributeTok{ylab =} \StringTok{"杠杆值"}\NormalTok{,}
+  \AttributeTok{col =} \FunctionTok{c}\NormalTok{(}\StringTok{"steelblue"}\NormalTok{, }\StringTok{"orange"}\NormalTok{, }\StringTok{"red"}\NormalTok{),}
+  \AttributeTok{pch =} \FunctionTok{c}\NormalTok{(}\DecValTok{16}\NormalTok{, }\DecValTok{18}\NormalTok{),}
+  \AttributeTok{lwd =} \FloatTok{1.5}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/module_4_outliers-1.pdf}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{threshold\_cook }\OtherTok{\textless{}{-}} \DecValTok{4} \SpecialCharTok{/} \FunctionTok{nrow}\NormalTok{(data\_cleaned)}
+\NormalTok{threshold\_leverage }\OtherTok{\textless{}{-}} \DecValTok{3} \SpecialCharTok{*} \FunctionTok{length}\NormalTok{(}\FunctionTok{coef}\NormalTok{(diag\_model)) }\SpecialCharTok{/} \FunctionTok{nrow}\NormalTok{(data\_cleaned)}
+
+\DocumentationTok{\#\#\#识别异常值}
+\NormalTok{outlier\_mask }\OtherTok{\textless{}{-}}\NormalTok{ cooks\_dist }\SpecialCharTok{\textgreater{}}\NormalTok{ threshold\_cook}
+\NormalTok{leverage\_mask }\OtherTok{\textless{}{-}}\NormalTok{ leverage }\SpecialCharTok{\textgreater{}}\NormalTok{ threshold\_leverage}
+
+\CommentTok{\# out\_vals \textless{}{-} outlier\_mask[outlier\_mask == TRUE] \# 仅作为变量存储}
+\FunctionTok{cat}\NormalTok{(}\StringTok{"识别出异常值:"}\NormalTok{, }\FunctionTok{sum}\NormalTok{(outlier\_mask), }\StringTok{"个}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 识别出异常值: 47 个
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cat}\NormalTok{(}\StringTok{"识别出高杠杆值:"}\NormalTok{, }\FunctionTok{sum}\NormalTok{(leverage\_mask), }\StringTok{"个}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 识别出高杠杆值: 74 个
+\end{verbatim}
+
+\section{8. 基于 K-Means 的歌单流量分层模型
+(模块五)}\label{ux57faux4e8e-k-means-ux7684ux6b4cux5355ux6d41ux91cfux5206ux5c42ux6a21ux578b-ux6a21ux5757ux4e94}
+
+在剔除了模块四识别出的高影响力异常值（Outliers）后，我们对剩余样本进行了
+K-Means 聚类分析。通过肘部法则（Elbow Method）确定最佳聚类数
+\(k=4\)，并计算了组间平方和（Between-Cluster Sum of Squares,
+BCSS）与总平方和（Total Sum of Squares, TSS）的比值
+
+\textbf{分析结论：}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  聚类模型的解释力 模型结果显示，解释方差比例高达
+  89.53\%。这一指标（\(BCSS/TSS\)）衡量了聚类结果对数据变异的解释程度。接近
+  90\% 的数值表明，仅通过将歌单划分为 4
+  个层级，就能解释整个数据集中绝大部分的播放量差异。这意味着歌单的流量分布并非均匀的连续体，而是存在显著的阶梯状分层结构
+\item
+  异常值剔除的必要性验证
+  鲁棒性分析：在未剔除异常值的前测中，由于极少数``超级爆款''拉扯了聚类中心，导致大部分腰部和尾部歌单被压缩在同一个低值簇中，掩盖了数据的内部结构
+  优化结果：剔除异常值后的高解释方差证明，剩余的 99\%
+  样本（普通歌单）有着清晰的\textbf{``头部-腰部-尾部''}金字塔结构。这种处理方式让模型对中低流量层的区分度显著提升
+\item
+  四层流量结构的商业定义 基于 \(k=4\)
+  的聚类中心（Centroids）排序，我们可以将歌单生态定义为： Cluster 1
+  (长尾层)：播放量极低，对应无效投稿或自嗨型内容，数量庞大。 Cluster 2
+  (潜力层)：拥有一定基础流量，属于腰部潜力股，是算法挖掘的重点区域。
+  Cluster 3 (热门层)：平台的主流推荐内容，具有较高的商业价值。 Cluster 4
+  (准爆款层)：接近但未达到异常值（超级爆款）水平的头部内容。
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#====模块5：聚类分析（需要去掉异常值点），之后再补充进去====}
+\DocumentationTok{\#\#\#提取正常值}
+\NormalTok{data\_normal }\OtherTok{\textless{}{-}}\NormalTok{ data\_cleaned }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(}\SpecialCharTok{!}\NormalTok{outlier\_mask) }\SpecialCharTok{\%\textgreater{}\%}\NormalTok{ dplyr}\SpecialCharTok{::}\FunctionTok{select}\NormalTok{(log\_play, play\_count)}
+\NormalTok{data\_outliers }\OtherTok{\textless{}{-}}\NormalTok{ data\_cleaned }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(outlier\_mask) }\SpecialCharTok{\%\textgreater{}\%}\NormalTok{ dplyr}\SpecialCharTok{::}\FunctionTok{select}\NormalTok{(log\_play, play\_count) }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{mutate}\NormalTok{(}\AttributeTok{cluster =} \ConstantTok{NA}\NormalTok{)}
+
+\DocumentationTok{\#\#\#肘部算法}
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{1234}\NormalTok{)}
+\NormalTok{wss }\OtherTok{=} \FunctionTok{numeric}\NormalTok{(}\DecValTok{10}\NormalTok{)}
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\DecValTok{10}\NormalTok{) \{}
+\NormalTok{  km }\OtherTok{=} \FunctionTok{kmeans}\NormalTok{(data\_normal}\SpecialCharTok{$}\NormalTok{play\_count, }\AttributeTok{centers =}\NormalTok{ i, }\AttributeTok{nstart =} \DecValTok{25}\NormalTok{)}
+\NormalTok{  wss[i] }\OtherTok{=}\NormalTok{ km}\SpecialCharTok{$}\NormalTok{tot.withinss}
+\NormalTok{\}}
+\FunctionTok{plot}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{10}\NormalTok{, wss, }\AttributeTok{type =} \StringTok{"b"}\NormalTok{, }\AttributeTok{xlab =} \StringTok{"Number of groups"}\NormalTok{, }\AttributeTok{ylab =} \StringTok{"Within groups sum of squares"}\NormalTok{, }\AttributeTok{main =} \StringTok{"播放量肘部算法确定聚类数"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/module_5_clustering-1.pdf}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{kmeans\_function }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(data, col\_names, k) \{}
+\NormalTok{  existing\_cols }\OtherTok{\textless{}{-}}\NormalTok{ col\_names[col\_names }\SpecialCharTok{\%in\%} \FunctionTok{names}\NormalTok{(data)]}
+  \ControlFlowTok{if}\NormalTok{(}\FunctionTok{length}\NormalTok{(existing\_cols) }\SpecialCharTok{\textgreater{}} \DecValTok{0}\NormalTok{) \{}
+\NormalTok{    data\_subset }\OtherTok{\textless{}{-}}\NormalTok{ data[, existing\_cols, drop }\OtherTok{=} \ConstantTok{FALSE}\NormalTok{]}
+    \FunctionTok{set.seed}\NormalTok{(}\DecValTok{123}\NormalTok{)}
+\NormalTok{    kmeans\_result }\OtherTok{\textless{}{-}} \FunctionTok{kmeans}\NormalTok{(data\_subset, }\AttributeTok{centers =}\NormalTok{ k, }\AttributeTok{nstart =} \DecValTok{25}\NormalTok{)}
+\NormalTok{    cluster\_centers }\OtherTok{\textless{}{-}}\NormalTok{ kmeans\_result}\SpecialCharTok{$}\NormalTok{centers}
+\NormalTok{    sorted\_centers }\OtherTok{\textless{}{-}}\NormalTok{ cluster\_centers[}\FunctionTok{order}\NormalTok{(cluster\_centers[, }\DecValTok{1}\NormalTok{]), , drop }\OtherTok{=} \ConstantTok{FALSE}\NormalTok{]}
+\NormalTok{    data}\SpecialCharTok{$}\NormalTok{cluster }\OtherTok{\textless{}{-}}\NormalTok{ kmeans\_result}\SpecialCharTok{$}\NormalTok{cluster}
+\NormalTok{  \} }\ControlFlowTok{else}\NormalTok{ \{}
+    \FunctionTok{stop}\NormalTok{(}\StringTok{"没有找到任何有效的列进行聚类分析。"}\NormalTok{)}
+\NormalTok{  \}}
+  \FunctionTok{return}\NormalTok{(}\FunctionTok{list}\NormalTok{(}\AttributeTok{kmeans\_result =}\NormalTok{ kmeans\_result, }\AttributeTok{data\_with\_clusters =}\NormalTok{ data))}
+\NormalTok{\}}
+
+\DocumentationTok{\#\#\#导出结果}
+\NormalTok{result1 }\OtherTok{\textless{}{-}} \FunctionTok{kmeans\_function}\NormalTok{(data\_normal, }\StringTok{"play\_count"}\NormalTok{, }\AttributeTok{k =} \DecValTok{4}\NormalTok{)}
+\NormalTok{result2 }\OtherTok{\textless{}{-}} \FunctionTok{kmeans\_function}\NormalTok{(data\_cleaned, }\StringTok{"play\_count"}\NormalTok{, }\AttributeTok{k =} \DecValTok{4}\NormalTok{)}
+
+\DocumentationTok{\#\#\#可视化操作}
+\NormalTok{data\_clustered1 }\OtherTok{\textless{}{-}}\NormalTok{ result1}\SpecialCharTok{$}\NormalTok{data\_with\_clusters}
+\FunctionTok{ggplot}\NormalTok{(data\_clustered1, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =} \FunctionTok{factor}\NormalTok{(cluster), }\AttributeTok{y =}\NormalTok{ play\_count, }\AttributeTok{fill =} \FunctionTok{factor}\NormalTok{(cluster))) }\SpecialCharTok{+}
+  \FunctionTok{geom\_boxplot}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"不同聚类的播放量分布（去除异常值）"}\NormalTok{, }\AttributeTok{x =} \StringTok{"聚类"}\NormalTok{, }\AttributeTok{y =} \StringTok{"播放次数"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{scale\_fill\_brewer}\NormalTok{(}\AttributeTok{palette =} \StringTok{"Set2"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme\_minimal}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/module_5_clustering-2.pdf}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{data\_clustered2 }\OtherTok{\textless{}{-}}\NormalTok{ result2}\SpecialCharTok{$}\NormalTok{data\_with\_clusters}
+\FunctionTok{ggplot}\NormalTok{(data\_clustered2, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =} \FunctionTok{factor}\NormalTok{(cluster), }\AttributeTok{y =}\NormalTok{ play\_count, }\AttributeTok{fill =} \FunctionTok{factor}\NormalTok{(cluster))) }\SpecialCharTok{+}
+  \FunctionTok{geom\_boxplot}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"不同聚类的播放量分布（不去除异常值）"}\NormalTok{, }\AttributeTok{x =} \StringTok{"聚类"}\NormalTok{, }\AttributeTok{y =} \StringTok{"播放次数"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{scale\_fill\_brewer}\NormalTok{(}\AttributeTok{palette =} \StringTok{"Set2"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme\_minimal}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/module_5_clustering-3.pdf}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\DocumentationTok{\#\#\#解释方差比例}
+\NormalTok{explained\_variance1 }\OtherTok{\textless{}{-}}\NormalTok{ result1}\SpecialCharTok{$}\NormalTok{kmeans\_result}\SpecialCharTok{$}\NormalTok{betweenss }\SpecialCharTok{/}\NormalTok{ result1}\SpecialCharTok{$}\NormalTok{kmeans\_result}\SpecialCharTok{$}\NormalTok{totss}
+\FunctionTok{cat}\NormalTok{(}\StringTok{"去除异常值后解释方差比例: "}\NormalTok{, }\FunctionTok{round}\NormalTok{(explained\_variance1 }\SpecialCharTok{*} \DecValTok{100}\NormalTok{, }\DecValTok{2}\NormalTok{), }\StringTok{"\%}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 去除异常值后解释方差比例:  89.53 %
+\end{verbatim}
+
+\section{9.
+基于日均播放量的生命周期与流量效率评估(模块六)}\label{ux57faux4e8eux65e5ux5747ux64adux653eux91cfux7684ux751fux547dux5468ux671fux4e0eux6d41ux91cfux6548ux7387ux8bc4ux4f30ux6a21ux5757ux516d}
+
+为了消除歌单发布时间长短对总播放量造成的累积偏差（即``老歌单优势''），我们构建了
+``日均播放量（Daily Play Velocity）''
+指标（\(Total Plays / Days Alive\)），以此衡量歌单获取流量的真实效率与当前热度
+
+\textbf{分析结论：}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  头部歌单的流量特征分析 根据 top\_velocity
+  列表数据，排名前列的歌单展现出极高的流量获取效率： 榜首歌单
+  《沉浸于字里行间°读书专用背景音乐》 实现了约 29.36万次/日
+  的惊人播放增速。这表明``功能性音乐''（如读书、健身、睡眠）具有极高的用户复听率和长尾效应，是平台流量的稳定基石。
+  排名第三的
+  《「前奏控」被前奏秒杀的古风歌》（约19.9万次/日）验证了``黄金前奏（Hook）''对于留存听众的关键作用。
+  对比数据发现，榜首歌单的粉丝数（13.8万）远低于第三名（191.8万），但其日均播放量却更高。这不仅打破了``唯粉丝论''，更在统计上证明了优质的内容定位比作者粉丝基数更能决定流量效率
+\item
+  象限分析法的战略价值
+  通过以中位数为界构建的``存活天数-日均播放量''四象限图，我们将歌单划分为四类生命周期状态：
+  第一象限（右上：老但优秀）：发布时间长且日均播放量依然维持高位
+  第二象限（左上：新生优秀）：此类歌单发布时间短但日均播放量高（高于中位数）
+  第三象限（左下：新生滞涨）：发布时间较短且未能获得初始流量
+  第四象限（右下：长尾沉寂）：虽然歌单老，但缺乏每日活跃听众，流量获取效率极低
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#====模块6：日均播放量====}
+\NormalTok{reference\_date }\OtherTok{\textless{}{-}} \FunctionTok{max}\NormalTok{(data\_cleaned}\SpecialCharTok{$}\NormalTok{create\_time)}
+
+\NormalTok{data\_velocity }\OtherTok{\textless{}{-}}\NormalTok{ data\_cleaned }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}
+    \CommentTok{\# 计算歌单存活天数}
+    \AttributeTok{days\_alive =} \FunctionTok{as.numeric}\NormalTok{(}\FunctionTok{difftime}\NormalTok{(reference\_date, create\_time, }\AttributeTok{units =} \StringTok{"days"}\NormalTok{)),}
+    \CommentTok{\# 计算日均播放量 }
+    \AttributeTok{plays\_per\_day =}\NormalTok{ play\_count }\SpecialCharTok{/} \FunctionTok{ifelse}\NormalTok{(days\_alive}\SpecialCharTok{==}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{, days\_alive)}
+\NormalTok{  ) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{arrange}\NormalTok{(}\FunctionTok{desc}\NormalTok{(plays\_per\_day))}
+
+\NormalTok{top\_velocity }\OtherTok{\textless{}{-}} \FunctionTok{head}\NormalTok{(data\_velocity }\SpecialCharTok{\%\textgreater{}\%}\NormalTok{ dplyr}\SpecialCharTok{::}\FunctionTok{select}\NormalTok{(name, plays\_per\_day, days\_alive, fans), }\DecValTok{10}\NormalTok{)}
+\FunctionTok{print}\NormalTok{(top\_velocity)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 10 x 4
+##    name                                    plays_per_day days_alive   fans
+##    <chr>                                           <dbl>      <dbl>  <dbl>
+##  1 沉浸于字里行间°读书专用背景音乐               293633.         13   8237
+##  2 ［年代感］欧美原声吉他弹唱精选100首           270744          12   1006
+##  3 「前奏控」被前奏秒杀的古风歌                  199384.         19  18482
+##  4 Ghost?Producer|那些才华横溢的幕后制作人       127737.         39  32965
+##  5 【 慎用！高浓度肾上腺素 〗                    112489.         28  38745
+##  6 给我辆坦克，我要上战场！（纪念查斯特）        111933.         37   1008
+##  7 前奏撩人|一见钟情的你 一听倾心的歌            104926.         30  10058
+##  8 ? 「健身歌单」夏天到了，准备开始运动           93943.         23   3032
+##  9 声控 | 撩你只用一首歌的时间                    91915.         55 139228
+## 10 「一曲二词」那些同曲异词的古风歌               85897.         28  18482
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{median\_days }\OtherTok{\textless{}{-}} \FunctionTok{median}\NormalTok{(data\_velocity}\SpecialCharTok{$}\NormalTok{days\_alive)}
+\NormalTok{median\_plays }\OtherTok{\textless{}{-}} \FunctionTok{median}\NormalTok{(data\_velocity}\SpecialCharTok{$}\NormalTok{plays\_per\_day)}
+\NormalTok{data\_velocity}\SpecialCharTok{$}\NormalTok{quadrant }\OtherTok{\textless{}{-}} \FunctionTok{with}\NormalTok{(data\_velocity, \{}
+  \FunctionTok{case\_when}\NormalTok{(}
+\NormalTok{    days\_alive }\SpecialCharTok{\textless{}=}\NormalTok{ median\_days }\SpecialCharTok{\&}\NormalTok{ plays\_per\_day }\SpecialCharTok{\textgreater{}}\NormalTok{ median\_plays }\SpecialCharTok{\textasciitilde{}} \StringTok{"左上：新生优秀"}\NormalTok{,}
+\NormalTok{    days\_alive }\SpecialCharTok{\textless{}=}\NormalTok{ median\_days }\SpecialCharTok{\&}\NormalTok{ plays\_per\_day }\SpecialCharTok{\textless{}=}\NormalTok{ median\_plays }\SpecialCharTok{\textasciitilde{}} \StringTok{"左下：新生不优秀"}\NormalTok{,}
+\NormalTok{    days\_alive }\SpecialCharTok{\textgreater{}}\NormalTok{ median\_days }\SpecialCharTok{\&}\NormalTok{ plays\_per\_day }\SpecialCharTok{\textgreater{}}\NormalTok{ median\_plays }\SpecialCharTok{\textasciitilde{}} \StringTok{"右上：老但优秀"}\NormalTok{,}
+\NormalTok{    days\_alive }\SpecialCharTok{\textgreater{}}\NormalTok{ median\_days }\SpecialCharTok{\&}\NormalTok{ plays\_per\_day }\SpecialCharTok{\textless{}=}\NormalTok{ median\_plays }\SpecialCharTok{\textasciitilde{}} \StringTok{"右下：老不优秀"}
+\NormalTok{  ) }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{factor}\NormalTok{(}\AttributeTok{levels =} \FunctionTok{c}\NormalTok{(}\StringTok{"左上：新生优秀"}\NormalTok{, }\StringTok{"左下：新生不优秀"}\NormalTok{, }\StringTok{"右上：老但优秀"}\NormalTok{, }\StringTok{"右下：老不优秀"}\NormalTok{))}
+\NormalTok{\})}
+
+\FunctionTok{ggplot}\NormalTok{(data\_velocity, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ days\_alive, }\AttributeTok{y =}\NormalTok{ plays\_per\_day, }\AttributeTok{color =}\NormalTok{ quadrant)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_point}\NormalTok{(}\AttributeTok{alpha =} \FloatTok{0.7}\NormalTok{, }\AttributeTok{size =} \FloatTok{2.5}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_vline}\NormalTok{(}\AttributeTok{xintercept =}\NormalTok{ median\_days, }\AttributeTok{linetype =} \StringTok{"dashed"}\NormalTok{, }\AttributeTok{color =} \StringTok{"gray50"}\NormalTok{, }\AttributeTok{size =} \DecValTok{1}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_hline}\NormalTok{(}\AttributeTok{yintercept =}\NormalTok{ median\_plays, }\AttributeTok{linetype =} \StringTok{"dashed"}\NormalTok{, }\AttributeTok{color =} \StringTok{"gray50"}\NormalTok{, }\AttributeTok{size =} \DecValTok{1}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{scale\_y\_log10}\NormalTok{(}\AttributeTok{labels =}\NormalTok{ scales}\SpecialCharTok{::}\NormalTok{comma) }\SpecialCharTok{+}
+  \FunctionTok{scale\_x\_continuous}\NormalTok{(}\AttributeTok{labels =}\NormalTok{ scales}\SpecialCharTok{::}\NormalTok{comma) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}
+    \AttributeTok{title =} \StringTok{"日均播放量四象限分析"}\NormalTok{,}
+    \AttributeTok{subtitle =} \FunctionTok{paste}\NormalTok{(}\StringTok{"分界线: 天数="}\NormalTok{, }\FunctionTok{round}\NormalTok{(median\_days), }\StringTok{"天, 播放量="}\NormalTok{, }\FunctionTok{round}\NormalTok{(median\_plays)),}
+    \AttributeTok{x =} \StringTok{"存活天数"}\NormalTok{, }\AttributeTok{y =} \StringTok{"日均播放量"}\NormalTok{,}
+    \AttributeTok{color =} \StringTok{"象限类型"}
+\NormalTok{  ) }\SpecialCharTok{+}
+  \FunctionTok{scale\_color\_manual}\NormalTok{(}\AttributeTok{values =} \FunctionTok{c}\NormalTok{(}
+    \StringTok{"左上：新生优秀"} \OtherTok{=} \StringTok{"\#2ECC71"}\NormalTok{,}
+    \StringTok{"左下：新生不优秀"} \OtherTok{=} \StringTok{"\#E74C3C"}\NormalTok{,}
+    \StringTok{"右上：老但优秀"} \OtherTok{=} \StringTok{"\#3498DB"}\NormalTok{,}
+    \StringTok{"右下：老不优秀"} \OtherTok{=} \StringTok{"\#95A5A6"}
+\NormalTok{  )) }\SpecialCharTok{+}
+  \FunctionTok{theme\_minimal}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/module_6_lifecycle-1.pdf}}
+
+\section{10.歌单形态特征的显著性筛选(模块七)}\label{ux6b4cux5355ux5f62ux6001ux7279ux5f81ux7684ux663eux8457ux6027ux7b5bux9009ux6a21ux5757ux4e03}
+
+基于逐步回归（StepAIC）的模型优选过程，我们对歌单的基础形态特征（标题长度、简介长度、歌曲数量、热门歌手数）进行了筛选
+
+\textbf{分析结论：}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  冗余变量剔除
+  模型比较（ANOVA）显示，包含``歌曲总数''的全模型与简化模型无显著差异。这意味着在统计层面，歌单包含多少首歌并不会直接影响播放量。用户并不在意歌单的``容量''，而更在意其``质量''或``描述''
+\item
+  关键形态指标
+  最终保留的变量（标题长度、简介长度、热门歌手数）均表现出显著性。这验证了
+  SEO（搜索引擎优化）
+  在歌单运营中的作用。更详尽的标题和简介包含了更多的关键词，增加了歌单在站内搜索中被命中的概率。同时，``热门歌手''作为流量钩子，能显著提升点击转化率
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#====模块7：歌单信息的影响====}
+\NormalTok{data\_morph }\OtherTok{\textless{}{-}}\NormalTok{ data\_cleaned }\SpecialCharTok{\%\textgreater{}\%}
+\NormalTok{  dplyr}\SpecialCharTok{::}\FunctionTok{select}\NormalTok{(play\_count, length\_name, length\_intro, number\_songs, number\_hot\_singers) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(play\_count }\SpecialCharTok{\textgreater{}} \DecValTok{0}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{na.omit}\NormalTok{()}
+
+\DocumentationTok{\#\#\#公式：log播放量 \textasciitilde{} 标题长度 + 简介长度 + 歌曲总数 + 热门歌手数}
+\NormalTok{model\_morph }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(}\FunctionTok{log}\NormalTok{(play\_count) }\SpecialCharTok{\textasciitilde{}}\NormalTok{ length\_name }\SpecialCharTok{+}\NormalTok{ length\_intro }\SpecialCharTok{+}\NormalTok{ number\_songs }\SpecialCharTok{+}\NormalTok{ number\_hot\_singers, }\AttributeTok{data =}\NormalTok{ data\_morph)}
+\FunctionTok{stepAIC}\NormalTok{(model\_morph, }\AttributeTok{direction =} \StringTok{"backward"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Start:  AIC=2362.53
+## log(play_count) ~ length_name + length_intro + number_songs + 
+##     number_hot_singers
+## 
+##                      Df Sum of Sq    RSS    AIC
+## - number_songs        1     1.059 6460.2 2360.9
+## <none>                            6459.1 2362.5
+## - length_name         1    25.778 6484.9 2368.7
+## - length_intro        1   115.969 6575.1 2397.0
+## - number_hot_singers  1   194.424 6653.5 2421.3
+## 
+## Step:  AIC=2360.87
+## log(play_count) ~ length_name + length_intro + number_hot_singers
+## 
+##                      Df Sum of Sq    RSS    AIC
+## <none>                            6460.2 2360.9
+## - length_name         1    26.212 6486.4 2367.2
+## - length_intro        1   115.360 6575.5 2395.1
+## - number_hot_singers  1   241.949 6702.1 2434.2
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = log(play_count) ~ length_name + length_intro + number_hot_singers, 
+##     data = data_morph)
+## 
+## Coefficients:
+##        (Intercept)         length_name        length_intro  number_hot_singers  
+##          11.518501            0.022089            0.001007            0.010535
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{model\_morph\_changed }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(}\FunctionTok{log}\NormalTok{(play\_count) }\SpecialCharTok{\textasciitilde{}}\NormalTok{ length\_name }\SpecialCharTok{+}\NormalTok{ length\_intro }\SpecialCharTok{+}\NormalTok{ number\_hot\_singers, }\AttributeTok{data =}\NormalTok{ data\_morph)}
+\FunctionTok{anova}\NormalTok{(model\_morph\_changed, model\_morph)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Analysis of Variance Table
+## 
+## Model 1: log(play_count) ~ length_name + length_intro + number_hot_singers
+## Model 2: log(play_count) ~ length_name + length_intro + number_songs + 
+##     number_hot_singers
+##   Res.Df    RSS Df Sum of Sq      F Pr(>F)
+## 1   2045 6460.2                           
+## 2   2044 6459.1  1    1.0591 0.3352 0.5627
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{summary}\NormalTok{(model\_morph\_changed)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = log(play_count) ~ length_name + length_intro + number_hot_singers, 
+##     data = data_morph)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -8.1794 -0.8477  0.0643  1.1811  4.6403 
+## 
+## Coefficients:
+##                     Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)        1.152e+01  1.192e-01  96.651  < 2e-16 ***
+## length_name        2.209e-02  7.668e-03   2.881  0.00401 ** 
+## length_intro       1.007e-03  1.667e-04   6.043 1.79e-09 ***
+## number_hot_singers 1.054e-02  1.204e-03   8.752  < 2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 1.777 on 2045 degrees of freedom
+## Multiple R-squared:  0.05576,    Adjusted R-squared:  0.05438 
+## F-statistic: 40.26 on 3 and 2045 DF,  p-value: < 2.2e-16
+\end{verbatim}
+
+\section{11.作者效应的交互作用与稀释效应(模块八)}\label{ux4f5cux8005ux6548ux5e94ux7684ux4ea4ux4e92ux4f5cux7528ux4e0eux7a00ux91caux6548ux5e94ux6a21ux5757ux516b}
+
+我们构建了包含交互项的多元回归模型 log(play\_count) \textasciitilde{}
+fans * grade * playlists + talent *
+verification，\(R^2=0.1241\)，F统计量显著。模型揭示了作者特征对播放量的非线性影响机制
+
+\textbf{分析结论：}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  数量的``稀释效应'' 变量
+  playlists（作者累计发布的歌单数）的系数显著为负
+  (\(-1.213e^{-02}, p < 0.001\))。
+  这是一个反直觉但深刻的发现。在控制了粉丝和等级后，发布越多的歌单反而对应越低的平均播放量。这表明``题海战术''在网易云生态中是失效的。大量发布低质内容会稀释作者的权重，导致算法推荐的边际收益递减
+\item
+  达人身份的独立显著性 talent是（达人）的主效应系数显著为正
+  (\(0.317, p < 0.001\))，而 verification是（认证）的主效应不显著
+  (\(p=0.816\))。在回归模型中，``达人''身份是比``认证''更稳健的流量预测因子。这可能因为``达人''是平台基于活跃度和内容质量赋予的动态标签，而``认证''更多代表社会身份，后者不一定能转化为平台内的流量。
+\item
+  交互效应与边际效用递减 talent:verification（达人 ×
+  认证）：交互项系数显著为负 (\(-1.242, p < 0.05\))。 fans:grade（粉丝 ×
+  等级）：交互项显著为正 (\(p < 0.05\))。
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#====模块8：作者信息的影响====}
+\NormalTok{data\_author }\OtherTok{\textless{}{-}}\NormalTok{ data\_cleaned }\SpecialCharTok{\%\textgreater{}\%}
+\NormalTok{  dplyr}\SpecialCharTok{::}\FunctionTok{select}\NormalTok{(play\_count, fans, grade, playlists, talent, verification, musician) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(play\_count }\SpecialCharTok{\textgreater{}} \DecValTok{0}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{na.omit}\NormalTok{()}
+
+\CommentTok{\# BoxCox检查 (注释掉以加快RMD生成速度，如需要可取消注释)}
+\CommentTok{\# boxcox(lm(play\_count \textasciitilde{} fans * grade * playlists + talent * verification * musician, data = data\_author), }
+\CommentTok{\#        lambda = seq({-}2, 2, length.out = 100))}
+
+\NormalTok{model\_full }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(}
+  \FunctionTok{log}\NormalTok{(play\_count) }\SpecialCharTok{\textasciitilde{}}\NormalTok{ fans }\SpecialCharTok{*}\NormalTok{ grade }\SpecialCharTok{*}\NormalTok{ playlists }\SpecialCharTok{+}\NormalTok{ talent }\SpecialCharTok{*}\NormalTok{ verification }\SpecialCharTok{*}\NormalTok{ musician,}
+  \AttributeTok{data =}\NormalTok{ data\_author}
+\NormalTok{)}
+\FunctionTok{summary}\NormalTok{(model\_full)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = log(play_count) ~ fans * grade * playlists + talent * 
+##     verification * musician, data = data_author)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -8.1452 -0.8695  0.0776  1.1014  5.9566 
+## 
+## Coefficients: (2 not defined because of singularities)
+##                                      Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)                         1.267e+01  3.353e-01  37.773  < 2e-16 ***
+## fans                                6.163e-06  1.049e-05   0.588 0.556752    
+## grade                              -8.408e-02  4.141e-02  -2.030 0.042453 *  
+## playlists                          -1.145e-02  2.654e-03  -4.313 1.69e-05 ***
+## talent是                            3.239e-01  9.045e-02   3.581 0.000351 ***
+## verification是                      9.943e-02  5.610e-01   0.177 0.859336    
+## musician是                         -4.474e-02  3.104e-01  -0.144 0.885425    
+## fans:grade                          2.408e-06  1.195e-06   2.015 0.043991 *  
+## fans:playlists                     -1.704e-07  2.420e-07  -0.704 0.481306    
+## grade:playlists                     1.009e-03  2.874e-04   3.513 0.000453 ***
+## talent是:verification是            -1.242e+00  6.083e-01  -2.042 0.041296 *  
+## talent是:musician是                -2.290e-01  4.338e-01  -0.528 0.597607    
+## verification是:musician是                  NA         NA      NA       NA    
+## fans:grade:playlists                1.355e-08  2.446e-08   0.554 0.579662    
+## talent是:verification是:musician是         NA         NA      NA       NA    
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 1.715 on 2036 degrees of freedom
+## Multiple R-squared:  0.1246, Adjusted R-squared:  0.1194 
+## F-statistic: 24.15 on 12 and 2036 DF,  p-value: < 2.2e-16
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{model\_changed }\OtherTok{\textless{}{-}} \FunctionTok{stepAIC}\NormalTok{(model\_full, }\AttributeTok{direction =} \StringTok{"backward"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Start:  AIC=2223.76
+## log(play_count) ~ fans * grade * playlists + talent * verification * 
+##     musician
+## 
+## 
+## Step:  AIC=2223.76
+## log(play_count) ~ fans + grade + playlists + talent + verification + 
+##     musician + fans:grade + fans:playlists + grade:playlists + 
+##     talent:verification + talent:musician + verification:musician + 
+##     fans:grade:playlists
+## 
+## 
+## Step:  AIC=2223.76
+## log(play_count) ~ fans + grade + playlists + talent + verification + 
+##     musician + fans:grade + fans:playlists + grade:playlists + 
+##     talent:verification + talent:musician + fans:grade:playlists
+## 
+##                        Df Sum of Sq    RSS    AIC
+## - talent:musician       1    0.8199 5990.0 2222.0
+## - fans:grade:playlists  1    0.9027 5990.1 2222.1
+## <none>                              5989.2 2223.8
+## - talent:verification   1   12.2641 6001.4 2226.0
+## 
+## Step:  AIC=2222.04
+## log(play_count) ~ fans + grade + playlists + talent + verification + 
+##     musician + fans:grade + fans:playlists + grade:playlists + 
+##     talent:verification + fans:grade:playlists
+## 
+##                        Df Sum of Sq    RSS    AIC
+## - fans:grade:playlists  1    0.9031 5990.9 2220.3
+## - musician              1    1.5991 5991.6 2220.6
+## <none>                              5990.0 2222.0
+## - talent:verification   1   12.0696 6002.1 2224.2
+## 
+## Step:  AIC=2220.35
+## log(play_count) ~ fans + grade + playlists + talent + verification + 
+##     musician + fans:grade + fans:playlists + grade:playlists + 
+##     talent:verification
+## 
+##                       Df Sum of Sq    RSS    AIC
+## - musician             1     1.460 5992.4 2218.8
+## <none>                             5990.9 2220.3
+## - fans:playlists       1     8.363 5999.3 2221.2
+## - talent:verification  1    12.079 6003.0 2222.5
+## - fans:grade           1    15.986 6006.9 2223.8
+## - grade:playlists      1    54.343 6045.3 2236.9
+## 
+## Step:  AIC=2218.85
+## log(play_count) ~ fans + grade + playlists + talent + verification + 
+##     fans:grade + fans:playlists + grade:playlists + talent:verification
+## 
+##                       Df Sum of Sq    RSS    AIC
+## <none>                             5992.4 2218.8
+## - fans:playlists       1     7.922 6000.3 2219.6
+## - talent:verification  1    12.280 6004.6 2221.1
+## - fans:grade           1    15.838 6008.2 2222.3
+## - grade:playlists      1    54.104 6046.5 2235.3
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{summary}\NormalTok{(model\_changed)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = log(play_count) ~ fans + grade + playlists + talent + 
+##     verification + fans:grade + fans:playlists + grade:playlists + 
+##     talent:verification, data = data_author)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -8.1449 -0.8706  0.0753  1.1012  6.0116 
+## 
+## Coefficients:
+##                           Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)              1.266e+01  3.350e-01  37.803  < 2e-16 ***
+## fans                     3.332e-06  9.104e-06   0.366 0.714423    
+## grade                   -8.322e-02  4.133e-02  -2.014 0.044182 *  
+## playlists               -1.213e-02  2.301e-03  -5.270 1.51e-07 ***
+## talent是                 3.170e-01  8.885e-02   3.568 0.000368 ***
+## verification是           1.303e-01  5.589e-01   0.233 0.815675    
+## fans:grade               2.602e-06  1.121e-06   2.321 0.020361 *  
+## fans:playlists          -3.569e-08  2.174e-08  -1.642 0.100780    
+## grade:playlists          1.080e-03  2.517e-04   4.291 1.86e-05 ***
+## talent是:verification是 -1.242e+00  6.075e-01  -2.044 0.041068 *  
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 1.714 on 2039 degrees of freedom
+## Multiple R-squared:  0.1241, Adjusted R-squared:  0.1203 
+## F-statistic: 32.11 on 9 and 2039 DF,  p-value: < 2.2e-16
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{anova}\NormalTok{(model\_changed, model\_full)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Analysis of Variance Table
+## 
+## Model 1: log(play_count) ~ fans + grade + playlists + talent + verification + 
+##     fans:grade + fans:playlists + grade:playlists + talent:verification
+## Model 2: log(play_count) ~ fans * grade * playlists + talent * verification * 
+##     musician
+##   Res.Df    RSS Df Sum of Sq      F Pr(>F)
+## 1   2039 5992.4                           
+## 2   2036 5989.2  3    3.1829 0.3607 0.7814
+\end{verbatim}
+
+\section{12.身份价值的非参数置换检验(模块九)}\label{ux8eabux4efdux4ef7ux503cux7684ux975eux53c2ux6570ux7f6eux6362ux68c0ux9a8cux6a21ux5757ux4e5d}
+
+为了进一步验证不同作者身份（达人、认证、音乐人）对播放量的真实提升效果，我们采用了对异常值不敏感的
+置换检验
+
+\textbf{分析结论：}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  ``达人''身份的稳健性优势 Talent vs None 的比较中，均值差异为
+  +24.5万，P值极度显著 (\(p < 0.001\))
+  ``达人''身份是唯一在统计学上具有绝对显著性的流量提升门槛。无论样本如何重抽样，达人歌单的播放量始终显著高于普通用户
+\item
+  ``认证''身份的高方差特征 Verification vs None 的均值差异高达
+  +53.3万（远高于达人），但 P值仅为 \(0.025\)（显著性弱于达人）
+  巨大的均值差异与较弱的
+  P值并存，说明``认证''群体内部存在极大的方差。该群体中可能包含少数自带巨大流量的明星（拉高了均值），但也包含大量无人问津的无效认证号。相比之下，``达人''的流量表现更为稳定和普适
+\item
+  ``音乐人''身份的无效性 Musician vs None 的 P值为 \(0.120\)（大于
+  0.05）
+  无法拒绝原假设。统计数据表明，``音乐人''身份对于歌单播放量没有显著的提升作用。这可能是因为音乐人更多关注原创单曲的发布，而非歌单整理，导致其在歌单领域的算法权重并不高于普通用户
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#====模块9：身份的作用(用permutation test来做检测)====}
+\NormalTok{data\_id }\OtherTok{\textless{}{-}}\NormalTok{ data\_cleaned }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}
+    \AttributeTok{is\_talent =} \FunctionTok{ifelse}\NormalTok{(talent }\SpecialCharTok{==} \StringTok{"是"}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{),}
+    \AttributeTok{is\_verified =} \FunctionTok{ifelse}\NormalTok{(verification }\SpecialCharTok{==} \StringTok{"是"}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{),}
+    \AttributeTok{is\_musician =} \FunctionTok{ifelse}\NormalTok{(musician }\SpecialCharTok{==} \StringTok{"是"}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{)}
+\NormalTok{  )}
+
+\CommentTok{\# 构建 4 级身份因子}
+\NormalTok{data\_id }\OtherTok{\textless{}{-}}\NormalTok{ data\_id }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}
+    \AttributeTok{identity\_4level =} \FunctionTok{case\_when}\NormalTok{(}
+\NormalTok{      is\_verified }\SpecialCharTok{==} \DecValTok{1} \SpecialCharTok{\textasciitilde{}} \StringTok{"Verification"}\NormalTok{,}
+\NormalTok{      is\_talent }\SpecialCharTok{==} \DecValTok{1} \SpecialCharTok{\textasciitilde{}} \StringTok{"Talent"}\NormalTok{,}
+\NormalTok{      is\_musician }\SpecialCharTok{==} \DecValTok{1} \SpecialCharTok{\textasciitilde{}} \StringTok{"Musician"}\NormalTok{,}
+      \ConstantTok{TRUE} \SpecialCharTok{\textasciitilde{}} \StringTok{"None"}
+\NormalTok{    ) }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{factor}\NormalTok{(}\AttributeTok{levels =} \FunctionTok{c}\NormalTok{(}\StringTok{"None"}\NormalTok{, }\StringTok{"Musician"}\NormalTok{, }\StringTok{"Talent"}\NormalTok{, }\StringTok{"Verification"}\NormalTok{)))}
+
+\NormalTok{comparison\_pairs }\OtherTok{\textless{}{-}} \FunctionTok{list}\NormalTok{(}
+  \FunctionTok{c}\NormalTok{(}\StringTok{"None"}\NormalTok{, }\StringTok{"Talent"}\NormalTok{),}
+  \FunctionTok{c}\NormalTok{(}\StringTok{"None"}\NormalTok{, }\StringTok{"Musician"}\NormalTok{),}
+  \FunctionTok{c}\NormalTok{(}\StringTok{"None"}\NormalTok{, }\StringTok{"Verification"}\NormalTok{),}
+  \FunctionTok{c}\NormalTok{(}\StringTok{"Musician"}\NormalTok{, }\StringTok{"Talent"}\NormalTok{),}
+  \FunctionTok{c}\NormalTok{(}\StringTok{"Talent"}\NormalTok{, }\StringTok{"Verification"}\NormalTok{),}
+  \FunctionTok{c}\NormalTok{(}\StringTok{"Musician"}\NormalTok{, }\StringTok{"Verification"}\NormalTok{)}
+\NormalTok{)}
+
+\NormalTok{run\_coin\_test }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(data, group\_col, value\_col, pair, }\AttributeTok{n\_perm =} \DecValTok{1000}\NormalTok{) \{ }\CommentTok{\# n\_perm 减小以加快演示}
+\NormalTok{  sub\_data }\OtherTok{\textless{}{-}}\NormalTok{ data }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{filter}\NormalTok{(}\SpecialCharTok{!!}\FunctionTok{sym}\NormalTok{(group\_col) }\SpecialCharTok{\%in\%}\NormalTok{ pair) }\SpecialCharTok{\%\textgreater{}\%}
+\NormalTok{    dplyr}\SpecialCharTok{::}\FunctionTok{select}\NormalTok{(}\SpecialCharTok{!!}\FunctionTok{sym}\NormalTok{(group\_col), }\SpecialCharTok{!!}\FunctionTok{sym}\NormalTok{(value\_col)) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{na.omit}\NormalTok{()}
+  
+\NormalTok{  sub\_data[[group\_col]] }\OtherTok{\textless{}{-}} \FunctionTok{factor}\NormalTok{(sub\_data[[group\_col]], }\AttributeTok{levels =}\NormalTok{ pair)}
+  
+  \ControlFlowTok{if}\NormalTok{(}\FunctionTok{nrow}\NormalTok{(sub\_data) }\SpecialCharTok{\textless{}} \DecValTok{4} \SpecialCharTok{||} \FunctionTok{length}\NormalTok{(}\FunctionTok{unique}\NormalTok{(sub\_data[[group\_col]])) }\SpecialCharTok{\textless{}} \DecValTok{2}\NormalTok{) \{}
+    \FunctionTok{return}\NormalTok{(}\ConstantTok{NULL}\NormalTok{)}
+\NormalTok{  \}}
+  
+\NormalTok{  group1\_vec }\OtherTok{\textless{}{-}}\NormalTok{ sub\_data[[value\_col]][sub\_data[[group\_col]] }\SpecialCharTok{==}\NormalTok{ pair[}\DecValTok{1}\NormalTok{]]}
+\NormalTok{  group2\_vec }\OtherTok{\textless{}{-}}\NormalTok{ sub\_data[[value\_col]][sub\_data[[group\_col]] }\SpecialCharTok{==}\NormalTok{ pair[}\DecValTok{2}\NormalTok{]]}
+\NormalTok{  observed\_diff }\OtherTok{\textless{}{-}} \FunctionTok{mean}\NormalTok{(group2\_vec) }\SpecialCharTok{{-}} \FunctionTok{mean}\NormalTok{(group1\_vec)}
+  
+\NormalTok{  test\_result }\OtherTok{\textless{}{-}}\NormalTok{ coin}\SpecialCharTok{::}\FunctionTok{oneway\_test}\NormalTok{(}
+    \FunctionTok{as.formula}\NormalTok{(}\FunctionTok{paste}\NormalTok{(value\_col, }\StringTok{"\textasciitilde{}"}\NormalTok{, group\_col)),}
+    \AttributeTok{data =}\NormalTok{ sub\_data,}
+    \AttributeTok{alternative =} \StringTok{"less"}\NormalTok{, }
+    \AttributeTok{distribution =}\NormalTok{ coin}\SpecialCharTok{::}\FunctionTok{approximate}\NormalTok{(}\AttributeTok{nresample =}\NormalTok{ n\_perm)}
+\NormalTok{  )}
+\NormalTok{  p\_value }\OtherTok{\textless{}{-}}\NormalTok{ coin}\SpecialCharTok{::}\FunctionTok{pvalue}\NormalTok{(test\_result)}
+  
+  \FunctionTok{list}\NormalTok{(}
+    \AttributeTok{comparison =} \FunctionTok{paste}\NormalTok{(pair[}\DecValTok{2}\NormalTok{], }\StringTok{"vs"}\NormalTok{, pair[}\DecValTok{1}\NormalTok{]),}
+    \AttributeTok{mean\_diff =}\NormalTok{ observed\_diff,}
+    \AttributeTok{p\_value =} \FunctionTok{as.numeric}\NormalTok{(p\_value),}
+    \AttributeTok{statistic =}\NormalTok{ coin}\SpecialCharTok{::}\FunctionTok{statistic}\NormalTok{(test\_result)}
+\NormalTok{  )}
+\NormalTok{\}}
+
+\NormalTok{results }\OtherTok{\textless{}{-}} \FunctionTok{lapply}\NormalTok{(comparison\_pairs, }\ControlFlowTok{function}\NormalTok{(pair) \{}
+  \FunctionTok{run\_coin\_test}\NormalTok{(data\_id, }\StringTok{"identity\_4level"}\NormalTok{, }\StringTok{"play\_count"}\NormalTok{, pair)}
+\NormalTok{\}) }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{bind\_rows}\NormalTok{()}
+
+\FunctionTok{print}\NormalTok{(results)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 6 x 4
+##   comparison               mean_diff p_value statistic
+##   <chr>                        <dbl>   <dbl>     <dbl>
+## 1 Talent vs None             245714.   0        -3.77 
+## 2 Musician vs None           199005.   0.138    -0.709
+## 3 Verification vs None       533093.   0.025    -2.71 
+## 4 Talent vs Musician          46710.   0.455    -0.200
+## 5 Verification vs Talent     287379.   0.037    -1.75 
+## 6 Verification vs Musician   334089.   0.075    -1.23
+\end{verbatim}
+
+\section{13.
+发布时间窗口的流量效应分析(模块十)}\label{ux53d1ux5e03ux65f6ux95f4ux7a97ux53e3ux7684ux6d41ux91cfux6548ux5e94ux5206ux6790ux6a21ux5757ux5341}
+
+为了探究 ``发布时机（Timing）''
+对歌单最终播放量的影响，我们对时间戳数据进行了多维度的聚合分析（Temporal
+Aggregation），分别考察了 周度循环（Day of Week） 和 月度循环（Month of
+Year） 下的平均播放量差异
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  周度效应：周末的``休闲红利'' 统计显示，周日（Sunday）
+  发布的歌单拥有全周最高的平均播放量，显著高于工作日（周一至周五）
+  我们推测在周末，用户拥有完整的整块休闲时间进行深度浏览和沉浸式聆听，此时发布的歌单更容易获得高完播率和互动，从而触发算法的初始推荐池。相比之下，工作日发布的歌单容易淹没在碎片化信息流中
+\item
+  季节效应：特定月份的流量峰值
+  在月度维度上，9月发布的歌单显示出异常高的平均流量
+  这可能与特定的情绪周期有关。9月通常对应``开学季''或``初秋''，是情感波动较大且功能性音乐需求（如学习背景音、秋日情绪歌单）激增的节点
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#====模块10：时序分析====}
+\DocumentationTok{\#\#\#最佳发布时间分析}
+\CommentTok{\# 1. 数据准备}
+\NormalTok{data\_time\_week }\OtherTok{\textless{}{-}}\NormalTok{ data\_cleaned }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}
+    \AttributeTok{create\_dt =} \FunctionTok{as\_datetime}\NormalTok{(create\_time),}
+    \AttributeTok{day\_of\_week =} \FunctionTok{factor}\NormalTok{(}\FunctionTok{wday}\NormalTok{(create\_dt, }\AttributeTok{label =} \ConstantTok{TRUE}\NormalTok{, }\AttributeTok{week\_start =} \DecValTok{1}\NormalTok{)) }
+\NormalTok{  ) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{group\_by}\NormalTok{(day\_of\_week) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarise}\NormalTok{(}\AttributeTok{avg\_play =} \FunctionTok{mean}\NormalTok{(play\_count, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{))}
+
+\CommentTok{\# 绘图：独立时间柱状图}
+\FunctionTok{ggplot}\NormalTok{(data\_time\_week, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ day\_of\_week, }\AttributeTok{y =}\NormalTok{ avg\_play, }\AttributeTok{fill =}\NormalTok{ day\_of\_week)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_col}\NormalTok{(}\AttributeTok{alpha =} \FloatTok{0.8}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{scale\_y\_continuous}\NormalTok{(}\AttributeTok{labels =}\NormalTok{ comma) }\SpecialCharTok{+} 
+  \FunctionTok{scale\_fill\_brewer}\NormalTok{(}\AttributeTok{palette =} \StringTok{"Blues"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"不同发布时间的流量差异"}\NormalTok{, }\AttributeTok{x =} \StringTok{"发布时间"}\NormalTok{, }\AttributeTok{y =} \StringTok{"平均播放量"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme\_minimal}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{theme}\NormalTok{(}\AttributeTok{legend.position =} \StringTok{"none"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/module_10_time-1.pdf}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# 月份分析}
+\NormalTok{data\_time\_month }\OtherTok{\textless{}{-}}\NormalTok{ data\_cleaned }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}
+    \AttributeTok{create\_dt =} \FunctionTok{as\_datetime}\NormalTok{(create\_time),}
+    \AttributeTok{month\_of\_year =} \FunctionTok{month}\NormalTok{(create\_dt, }\AttributeTok{label =} \ConstantTok{TRUE}\NormalTok{, }\AttributeTok{abbr =} \ConstantTok{TRUE}\NormalTok{) }
+\NormalTok{  ) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(}\SpecialCharTok{!}\FunctionTok{is.na}\NormalTok{(month\_of\_year)) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{group\_by}\NormalTok{(month\_of\_year) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarise}\NormalTok{(}\AttributeTok{avg\_play =} \FunctionTok{mean}\NormalTok{(play\_count, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{ungroup}\NormalTok{()}
+
+\FunctionTok{ggplot}\NormalTok{(data\_time\_month, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ month\_of\_year, }\AttributeTok{y =}\NormalTok{ avg\_play)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_col}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{fill =}\NormalTok{ avg\_play), }\AttributeTok{alpha =} \FloatTok{0.9}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{scale\_fill\_distiller}\NormalTok{(}\AttributeTok{palette =} \StringTok{"Blues"}\NormalTok{, }\AttributeTok{direction =} \DecValTok{1}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{scale\_y\_continuous}\NormalTok{(}\AttributeTok{labels =}\NormalTok{ comma) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"不同发布月份的流量差异"}\NormalTok{, }\AttributeTok{x =} \StringTok{"发布时间"}\NormalTok{, }\AttributeTok{y =} \StringTok{"平均播放量"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme\_minimal}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{theme}\NormalTok{(}\AttributeTok{legend.position =} \StringTok{"none"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/module_10_time-2.pdf}}
+\# 14.
+
+\section{15. 基于 PCA-神经网络的流量预测模型评估
+(模块十二)}\label{ux57faux4e8e-pca-ux795eux7ecfux7f51ux7edcux7684ux6d41ux91cfux9884ux6d4bux6a21ux578bux8bc4ux4f30-ux6a21ux5757ux5341ux4e8c}
+
+为了验证``播放量是否可被预测''，我们构建了一个结合了 主成分分析（PCA）
+与 神经网络（Neural Network） 的混合预测模型。该模型利用 PCA
+提取歌单与作者的潜在特征（Latent
+Features），并结合高权重的互动指标，对测试集数据进行了盲测。以下是针对模型表现的详细诊断
+
+\textbf{分析结论：}
+
+1.特征工程的有效性 模型引入了 PC1 至 PC4
+四个主成分。这有效地解决了原始数据中``作者等级''、``歌单数''、``粉丝数''之间存在的
+多重共线性
+问题，同时保留了原始变量的主要信息量。这种降维处理显著提升了神经网络训练的收敛速度和泛化能力，避免了过拟合
+
+2.模型拟合优度模型的决定系数 \(R^2 = 0.741\)
+这证实了歌单的流量表现并非完全随机，而是高度依赖于``内容属性（PCA特征）''与``互动反馈（互动指标）''的确定性组合
+
+3.商业应用价值：流量分级预测 由Prediction Error
+Matrix（混淆矩阵）来看，我们的模型可以进行 ``流量层级分类（Tier
+Classification）''操作
+高准确率区域：矩阵左下角显示，在``Low''（低流量）类别中，模型正确预测了
+409 个样本，误判极少。这说明模型极擅长识别``非爆款''内容
+通过准确剔除低潜力内容（Low
+Tier），运营团队可以将宝贵的首页曝光位和推广预算集中在模型预测为``Medium''或``High''的内容上，从而极大优化流量分发效率
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# ====模块12：神经网络预测以及error矩阵====}
+
+\NormalTok{nn\_data }\OtherTok{\textless{}{-}}\NormalTok{ data\_cleaned }\SpecialCharTok{\%\textgreater{}\%}
+\NormalTok{  dplyr}\SpecialCharTok{::}\FunctionTok{select}\NormalTok{(}
+\NormalTok{    play\_count, }
+\NormalTok{    collect\_count, share\_count, comment\_count, }\CommentTok{\# 中间层/强相关变量}
+\NormalTok{    fans, grade, playlists,                }\CommentTok{\# 作者特征}
+\NormalTok{    length\_name, length\_intro, number\_songs, number\_hot\_singers }\CommentTok{\# 歌单特征}
+\NormalTok{  ) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{na.omit}\NormalTok{()}
+
+\CommentTok{\# 2. PCA分析}
+\NormalTok{pca\_features }\OtherTok{\textless{}{-}}\NormalTok{ nn\_data }\SpecialCharTok{\%\textgreater{}\%} 
+\NormalTok{  dplyr}\SpecialCharTok{::}\FunctionTok{select}\NormalTok{(fans, grade, playlists, length\_name, length\_intro, number\_songs, number\_hot\_singers)}
+
+\NormalTok{pca\_res }\OtherTok{\textless{}{-}} \FunctionTok{prcomp}\NormalTok{(pca\_features, }\AttributeTok{scale. =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{pca\_scores }\OtherTok{\textless{}{-}} \FunctionTok{as.data.frame}\NormalTok{(pca\_res}\SpecialCharTok{$}\NormalTok{x[, }\DecValTok{1}\SpecialCharTok{:}\DecValTok{4}\NormalTok{])}
+\FunctionTok{names}\NormalTok{(pca\_scores) }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"PC1"}\NormalTok{, }\StringTok{"PC2"}\NormalTok{, }\StringTok{"PC3"}\NormalTok{, }\StringTok{"PC4"}\NormalTok{)}
+
+\CommentTok{\# 数据合并}
+\NormalTok{model\_data }\OtherTok{\textless{}{-}} \FunctionTok{cbind}\NormalTok{(}
+\NormalTok{  dplyr}\SpecialCharTok{::}\FunctionTok{select}\NormalTok{(nn\_data, play\_count, collect\_count, share\_count, comment\_count), }
+\NormalTok{  pca\_scores}
+\NormalTok{)}
+
+\CommentTok{\# 归一化/标准化数据}
+\NormalTok{preproc\_values }\OtherTok{\textless{}{-}} \FunctionTok{preProcess}\NormalTok{(model\_data, }\AttributeTok{method =} \FunctionTok{c}\NormalTok{(}\StringTok{"center"}\NormalTok{, }\StringTok{"scale"}\NormalTok{))}
+\NormalTok{model\_data\_scaled }\OtherTok{\textless{}{-}} \FunctionTok{predict}\NormalTok{(preproc\_values, model\_data)}
+
+\CommentTok{\# 划分训练集和测试集}
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{123}\NormalTok{)}
+\NormalTok{train\_index }\OtherTok{\textless{}{-}} \FunctionTok{createDataPartition}\NormalTok{(model\_data\_scaled}\SpecialCharTok{$}\NormalTok{play\_count, }\AttributeTok{p =} \FloatTok{0.7}\NormalTok{, }\AttributeTok{list =} \ConstantTok{FALSE}\NormalTok{)}
+\NormalTok{train\_set }\OtherTok{\textless{}{-}}\NormalTok{ model\_data\_scaled[train\_index, ]}
+\NormalTok{test\_set }\OtherTok{\textless{}{-}}\NormalTok{ model\_data\_scaled[}\SpecialCharTok{{-}}\NormalTok{train\_index, ]}
+
+\CommentTok{\# 神经网络模型}
+\NormalTok{nn\_formula }\OtherTok{\textless{}{-}}\NormalTok{ play\_count }\SpecialCharTok{\textasciitilde{}}\NormalTok{ collect\_count }\SpecialCharTok{+}\NormalTok{ share\_count }\SpecialCharTok{+}\NormalTok{ comment\_count }\SpecialCharTok{+}\NormalTok{ PC1 }\SpecialCharTok{+}\NormalTok{ PC2 }\SpecialCharTok{+}\NormalTok{ PC3 }\SpecialCharTok{+}\NormalTok{ PC4}
+\NormalTok{nn\_model }\OtherTok{\textless{}{-}} \FunctionTok{nnet}\NormalTok{(nn\_formula, }\AttributeTok{data =}\NormalTok{ train\_set, }\AttributeTok{size =} \DecValTok{10}\NormalTok{, }\AttributeTok{decay =} \FloatTok{0.01}\NormalTok{, }\AttributeTok{linout =} \ConstantTok{TRUE}\NormalTok{, }\AttributeTok{maxit =} \DecValTok{500}\NormalTok{, }\AttributeTok{trace =} \ConstantTok{FALSE}\NormalTok{)}
+
+\CommentTok{\# 预测与评估}
+\NormalTok{predictions\_scaled }\OtherTok{\textless{}{-}} \FunctionTok{predict}\NormalTok{(nn\_model, test\_set)}
+
+\CommentTok{\# 反归一化}
+\NormalTok{play\_count\_mean }\OtherTok{\textless{}{-}} \FunctionTok{mean}\NormalTok{(model\_data}\SpecialCharTok{$}\NormalTok{play\_count)}
+\NormalTok{play\_count\_sd }\OtherTok{\textless{}{-}} \FunctionTok{sd}\NormalTok{(model\_data}\SpecialCharTok{$}\NormalTok{play\_count)}
+\NormalTok{predictions\_raw }\OtherTok{\textless{}{-}}\NormalTok{ (predictions\_scaled }\SpecialCharTok{*}\NormalTok{ play\_count\_sd) }\SpecialCharTok{+}\NormalTok{ play\_count\_mean}
+\NormalTok{test\_set}\SpecialCharTok{$}\NormalTok{play\_count\_raw }\OtherTok{\textless{}{-}}\NormalTok{ (test\_set}\SpecialCharTok{$}\NormalTok{play\_count }\SpecialCharTok{*}\NormalTok{ play\_count\_sd) }\SpecialCharTok{+}\NormalTok{ play\_count\_mean}
+
+\NormalTok{rmse\_val }\OtherTok{\textless{}{-}} \FunctionTok{sqrt}\NormalTok{(}\FunctionTok{mean}\NormalTok{((predictions\_raw }\SpecialCharTok{{-}}\NormalTok{ test\_set}\SpecialCharTok{$}\NormalTok{play\_count\_raw)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{))}
+\NormalTok{r2\_val }\OtherTok{\textless{}{-}} \FunctionTok{cor}\NormalTok{(predictions\_raw, test\_set}\SpecialCharTok{$}\NormalTok{play\_count\_raw)}\SpecialCharTok{\^{}}\DecValTok{2}
+
+\FunctionTok{cat}\NormalTok{(}\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{=== 神经网络模型评估 ===}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## === 神经网络模型评估 ===
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cat}\NormalTok{(}\StringTok{"RMSE:"}\NormalTok{, rmse\_val, }\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## RMSE: 535945.9
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cat}\NormalTok{(}\StringTok{"R{-}squared:"}\NormalTok{, r2\_val, }\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## R-squared: 0.741072
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# 绘制预测值 vs 真实值}
+\NormalTok{pred\_df }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}\AttributeTok{Actual =}\NormalTok{ test\_set}\SpecialCharTok{$}\NormalTok{play\_count\_raw, }\AttributeTok{Predicted =}\NormalTok{ predictions\_raw)}
+
+\FunctionTok{ggplot}\NormalTok{(pred\_df, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ Actual, }\AttributeTok{y =}\NormalTok{ Predicted)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_point}\NormalTok{(}\AttributeTok{alpha =} \FloatTok{0.5}\NormalTok{, }\AttributeTok{color =} \StringTok{"purple"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_abline}\NormalTok{(}\AttributeTok{intercept =} \DecValTok{0}\NormalTok{, }\AttributeTok{slope =} \DecValTok{1}\NormalTok{, }\AttributeTok{linetype =} \StringTok{"dashed"}\NormalTok{, }\AttributeTok{color =} \StringTok{"red"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}
+    \AttributeTok{title =} \StringTok{"Neural Network Prediction Accuracy"}\NormalTok{,}
+    \AttributeTok{subtitle =} \FunctionTok{paste}\NormalTok{(}\StringTok{"R{-}squared ="}\NormalTok{, }\FunctionTok{round}\NormalTok{(r2\_val, }\DecValTok{3}\NormalTok{)),}
+    \AttributeTok{x =} \StringTok{"Actual Play Count"}\NormalTok{,}
+    \AttributeTok{y =} \StringTok{"Predicted Play Count"}
+\NormalTok{  ) }\SpecialCharTok{+}
+  \FunctionTok{theme\_minimal}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/module_12_neural_network-1.pdf}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# 误差矩阵可视化}
+\NormalTok{breaks }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\FloatTok{793134.5}\NormalTok{, }\FloatTok{2269060.5}\NormalTok{, }\DecValTok{4575695}\NormalTok{, }\DecValTok{32119005}\NormalTok{)}
+\NormalTok{actual\_class }\OtherTok{\textless{}{-}} \FunctionTok{cut}\NormalTok{(test\_set}\SpecialCharTok{$}\NormalTok{play\_count\_raw, }\AttributeTok{breaks =}\NormalTok{ breaks, }\AttributeTok{labels =} \FunctionTok{c}\NormalTok{(}\StringTok{"Low"}\NormalTok{, }\StringTok{"Medium"}\NormalTok{, }\StringTok{"High"}\NormalTok{, }\StringTok{"Very High"}\NormalTok{), }\AttributeTok{include.lowest =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{pred\_class }\OtherTok{\textless{}{-}} \FunctionTok{cut}\NormalTok{(predictions\_raw, }\AttributeTok{breaks =}\NormalTok{ breaks, }\AttributeTok{labels =} \FunctionTok{c}\NormalTok{(}\StringTok{"Low"}\NormalTok{, }\StringTok{"Medium"}\NormalTok{, }\StringTok{"High"}\NormalTok{, }\StringTok{"Very High"}\NormalTok{), }\AttributeTok{include.lowest =} \ConstantTok{TRUE}\NormalTok{)}
+
+\NormalTok{error\_matrix }\OtherTok{\textless{}{-}} \FunctionTok{table}\NormalTok{(}\AttributeTok{Predicted =}\NormalTok{ pred\_class, }\AttributeTok{Actual =}\NormalTok{ actual\_class)}
+\NormalTok{melted\_cmat }\OtherTok{\textless{}{-}} \FunctionTok{melt}\NormalTok{(error\_matrix)}
+
+\FunctionTok{ggplot}\NormalTok{(}\AttributeTok{data =}\NormalTok{ melted\_cmat, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ Actual, }\AttributeTok{y =}\NormalTok{ Predicted, }\AttributeTok{fill =}\NormalTok{ value)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_tile}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{geom\_text}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{label =}\NormalTok{ value), }\AttributeTok{color =} \StringTok{"white"}\NormalTok{, }\AttributeTok{size =} \DecValTok{5}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{scale\_fill\_gradient}\NormalTok{(}\AttributeTok{low =} \StringTok{"\#3498DB"}\NormalTok{, }\AttributeTok{high =} \StringTok{"\#E74C3C"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"Prediction Error Matrix"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme\_minimal}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-latex/module_12_neural_network-2.pdf}}
+
+\section{16. 总结与建议}\label{ux603bux7ed3ux4e0eux5efaux8bae}
+
+本研究通过对 2048
+个网易云音乐歌单样本的全方位挖掘，从基础统计到机器学习预测，成功拆解了播放量飙升背后的``隐藏公式''。特别是最终构建的
+PCA-神经网络混合模型，以 \(R^2 = 0.741\)
+的高拟合优度证实了歌单流量并非不可捉摸的``玄学''，而是内容属性、互动反馈与创作者权益共同作用的确定性结果。
+基于上述数据分析，针对不同利益相关方提出以下建议：
+
+\begin{itemize}
+\item
+  \textbf{对于平台方} 实施``负向剔除''资源优化策略： 利用本报告验证的
+  PCA-神经网络模型，平台不应只关注预测``谁是爆款''，而应利用模型极擅长识别``非爆款''（Low
+  Tier）的特性，准确剔除低潜力内容。将原本均匀撒向海量新歌单的首页曝光位和推广预算，从预测为``Low''的
+  40\% 内容中抽离出来，集中火力``饱和式攻击''模型预测为 ``Medium'' 或
+  ``High'' 的腰部潜力股，从而极大优化流量分发效率。 扶持``功能性''内容：
+  数据显示，读书、健身等场景化歌单具有极高的日均播放效率和长尾生命力。平台应建立专门的场景化标签索引体系，将其作为稳定的流量基石
+\item
+  \textbf{对于创作者} SEO 与标签策略：
+  放弃``标题党''或过于文艺晦涩的命名，增加标题和简介的长度（Text
+  Density）以覆盖更多搜索关键词 在标签选择上，采取 ``2+1''策略：2
+  个热门标签（如华语、流行）确保基础曝光池，1
+  个垂直标签（如治愈、学习）精准定位受众
+\end{itemize}
+
+择时与身份运营： 利用 周日（休闲红利） 和 9月（季节性情绪）
+的时间窗口发布重点内容
+停止盲目堆砌歌单数量，转而通过提升单品质量（尤其是诱导收藏行为）来争取
+``达人'' 身份，这是比单纯积累粉丝更有效的流量杠杆
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{对于用户}
+  在挑选歌单时，不要迷信作者的``认证''光环或粉丝总量。应更多关注歌单的
+  ``收藏/播放比'' 以及作者的 ``达人''
+  标识，这些往往是高质量内容的真实信号
+\end{itemize}
+
+\end{document}

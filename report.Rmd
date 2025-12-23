@@ -4,12 +4,9 @@ author: "zhaozixi，wangyuean"
 date: "`r Sys.Date()`"
 output:
   pdf_document:
-    toc: true
+    latex_engine: xelatex
   html_document:
-    toc: true
-    toc_float: true
-    theme: cosmo
-    number_sections: true
+    df_print: paged
 ---
 
 ```{r setup, include=FALSE}
@@ -27,7 +24,7 @@ windowsFonts(SimHei = windowsFont("SimHei"))
 # 2. 环境加载与数据预处理
 
 **数据概况：**
-原始数据集包含 2048 个歌单样本，涵盖 79 个特征变量。我们将首先进行缺失值处理（主要是“简介”字段）以及将分类变量转化为二值变量。
+原始数据集包含 2048 个歌单样本，涵盖79个特征变量。我们将首先进行缺失值处理（主要是“简介”字段）以及将分类变量转化为二值变量。
 
 ```{r load_libraries_and_data}
 library(tidyverse)
@@ -52,8 +49,7 @@ library(caret)
 library(reshape2)
 library(lmPerm)
 
-# 读取数据 (保持您的原始路径)
-data <- read_csv("C:/Users/Lenovo/Desktop/project/统计计算与软件project/网易云音乐歌单分析/data.csv")
+data <- read_csv("网易云音乐歌单分析/data.csv")
 
 # ==== 1、清洗数据 ====
 
